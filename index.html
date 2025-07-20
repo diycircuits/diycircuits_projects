@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIY Circuits Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons (e.g., cart, delete, whatsapp) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e0e0e0;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #a0a0a0;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #808080;
+        }
+        /* Hide specific elements on print */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8 lg:p-10 min-h-screen flex items-center justify-center">
+    <div class="container mx-auto bg-white p-6 sm:p-8 md:p-10 rounded-xl shadow-lg max-w-6xl w-full">
+        <!-- Header Section -->
+        <header class="text-center mb-8 pb-4 border-b border-gray-200">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">DIY Circuits</h1>
+            <p class="text-gray-600 mt-2">Address: 373, Near Chinnapa Akhada, Panchpaoli Rd, Balabhaupeth, Nagpur, Maharashtra 440017</p>
+            <p class="text-gray-600">Contact: +91-8446173429, +91-9172151715</p>
+            <p class="text-600">Website: <a href="https://www.diycircuits.in" target="_blank" class="text-blue-600 hover:underline">www.diycircuits.in</a></p>
+            <div class="flex justify-center space-x-4 mt-2">
+                <a href="https://www.instagram.com/diycircuits/" target="_blank" class="text-pink-600 hover:text-pink-700 text-2xl transition ease-in-out duration-150">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://youtube.com/@diycircuits?si=Hhudrc8d40ZFQkbU" target="_blank" class="text-red-600 hover:text-red-700 text-2xl transition ease-in-out duration-150">
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a href="https://wa.me/918446173429" target="_blank" class="text-green-600 hover:text-green-700 text-2xl transition ease-in-out duration-150">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </header>
+
+        <!-- Navigation Buttons (Visible on all main views) -->
+        <nav id="mainNav" class="mb-8 flex justify-center space-x-4 no-print relative">
+            <button id="showStudentBtn" class="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition ease-in-out duration-150 shadow-sm">
+                Student View
+            </button>
+            <!-- Admin Login button moved to the top right corner -->
+            <button id="showLoginBtn" class="absolute top-0 right-0 mt-2 mr-2 px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition ease-in-out duration-150 shadow-sm text-sm">
+                Admin Login
+            </button>
+        </nav>
+
+        <!-- Login Section -->
+        <section id="loginSection" class="view-section hidden">
+            <div class="max-w-md mx-auto bg-blue-50 p-8 rounded-xl shadow-inner">
+                <h2 class="text-2xl font-semibold text-blue-800 mb-6 text-center">Admin Login</h2>
+                <p class="text-sm text-red-700 mb-4 bg-red-100 p-3 rounded-md border border-red-200">
+                    <strong>Important Security Warning:</strong> This dashboard uses your browser's Local Storage. Your credentials (username and password) are hardcoded directly in the code, which is not secure. For real applications, a secure server-side authentication system (like Firebase Authentication) should be used.
+                </p>
+                <form id="loginForm">
+                    <div class="mb-4">
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                        <input type="text" id="username" name="username" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div class="mb-6">
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" id="password" name="password" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <button type="submit"
+                            class="w-full px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition ease-in-out duration-150">
+                        Login
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Admin Dashboard Section -->
+        <section id="adminDashboard" class="view-section hidden">
+            <div class="flex justify-between items-center mb-6 no-print">
+                <h2 class="text-2xl font-semibold text-gray-800">Admin Panel</h2>
+                <div class="flex space-x-3">
+                    <button id="showAdminProjectsBtn" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition ease-in-out duration-150 shadow-sm">
+                        Manage Projects
+                    </button>
+                    <button id="showAdminInquiriesBtn" class="px-4 py-2 bg-purple-500 text-white rounded-md hover:bg-purple-600 transition ease-in-out duration-150 shadow-sm relative">
+                        View Inquiries <span id="newInquiriesBadge" class="absolute top-0 right-0 -mt-1 -mr-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                    </button>
+                    <button id="adminLogoutBtn" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition ease-in-out duration-150 shadow-sm">
+                        Logout
+                    </button>
+                </div>
+            </div>
+            <p class="text-sm text-red-700 mb-4 bg-red-100 p-3 rounded-md border border-red-200">
+                <strong>Important Data Warning:</strong> This dashboard uses your browser's Local Storage. Project and inquiry data is stored only in your browser. If you clear browser cache/data, this data will be permanently lost. For critical data, using a server-side database (like Firebase Firestore) is highly recommended.
+            </p>
+
+            <!-- Admin Projects Management Sub-section -->
+            <div id="adminProjectsManagement" class="admin-sub-section">
+                <!-- New Project Entry Form (Admin Only) -->
+                <div class="mb-8 p-6 bg-blue-50 rounded-lg shadow-inner no-print">
+                    <h3 id="adminProjectFormTitle" class="text-xl font-semibold text-blue-800 mb-4">Add New Project</h3>
+                    <form id="adminProjectForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="hidden" id="adminProjectId" name="id">
+                        <div>
+                            <label for="adminProjectCategory" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                            <input type="text" id="adminProjectCategory" name="category" required
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="adminProjectTitle" class="block text-sm font-medium text-gray-700 mb-1">Project Title</label>
+                            <input type="text" id="adminProjectTitle" name="title" required
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="adminProjectDescription" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                            <textarea id="adminProjectDescription" name="description" rows="3"
+                                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="adminProjectCost" class="block text-sm font-medium text-gray-700 mb-1">Cost (₹)</label>
+                            <input type="number" id="adminProjectCost" name="cost" required min="0" step="1"
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                        <div class="md:col-span-2 flex justify-end space-x-2">
+                            <button type="button" id="cancelEditProjectBtn"
+                                    class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition ease-in-out duration-150 hidden">
+                                Cancel Edit
+                            </button>
+                            <button type="submit" id="submitProjectBtn"
+                                    class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition ease-in-out duration-150">
+                                Add Project
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Admin Project List -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">All Projects (Admin View)</h3>
+                    <div class="overflow-x-auto rounded-lg shadow-md">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-200">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider rounded-tl-lg">Category</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Project Title</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Cost (₹)</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider rounded-tr-lg no-print">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminProjectTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Admin project rows will be inserted here by JavaScript -->
+                            </tbody>
+                        </table>
+                        <div id="noAdminProjectsMessage" class="text-center py-4 text-gray-500 hidden">No projects yet. Add a new project!</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Inquiries View Sub-section -->
+            <div id="adminInquiriesView" class="admin-sub-section hidden">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Student Inquiries</h3>
+                <p class="text-sm text-gray-600 mb-4 no-print">
+                    <strong>Note for Admin:</strong> Discounts (5% for review/referral) are applied manually during final price negotiation. Check the 'Referral Code Used' column.
+                </p>
+                <div class="overflow-x-auto rounded-lg shadow-md">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-200">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Inquiry ID</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Student Name</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Contact</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Projects</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Total (₹)</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Referral Code Used</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Status</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider no-print">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminInquiriesTableBody" class="bg-white divide-y divide-gray-200">
+                            <!-- Inquiry rows will be inserted here -->
+                        </tbody>
+                    </table>
+                    <div id="noInquiriesMessage" class="text-center py-4 text-gray-500 hidden">No new inquiries yet.</div>
+                </div>
+                <div class="flex justify-end mt-4 no-print">
+                    <button id="clearAllInquiriesBtn" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition ease-in-out duration-150 shadow-sm">
+                        Clear All Inquiries
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Student Dashboard Section -->
+        <section id="studentDashboard" class="view-section hidden">
+            <!-- Feedback & Referral Section (Top) -->
+            <div class="mt-4 mb-6 p-6 bg-yellow-50 rounded-lg shadow-inner no-print">
+                <h3 class="text-xl font-semibold text-yellow-800 mb-4">Your Feedback & Referrals Matter!</h3>
+                
+                <div class="mb-6 p-4 bg-yellow-100 rounded-md border border-yellow-200">
+                    <p class="text-gray-700 mb-3">
+                        We'd love your feedback! Post a review to our profile and get a <strong>5% discount</strong> on any project.
+                    </p>
+                    <a href="https://g.page/r/CZxwe-UnodgqEBE/review" target="_blank"
+                       class="inline-flex items-center px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 transition ease-in-out duration-150 shadow-sm">
+                        <i class="fas fa-star mr-2"></i> Leave a Review Now!
+                    </a>
+                </div>
+
+                <div class="p-4 bg-yellow-100 rounded-md border border-yellow-200">
+                    <p class="text-gray-700 mb-3">
+                        Refer a friend and both get a <strong>5% discount</strong> on your projects! Share your unique referral link:
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
+                        <input type="text" id="referralLinkDisplay" readonly placeholder="Click 'Generate' for your link"
+                               class="flex-grow px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-700 sm:text-sm cursor-not-allowed">
+                        <button id="generateReferralLinkBtn"
+                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition ease-in-out duration-150 shadow-sm flex-shrink-0">
+                            Generate Link
+                        </button>
+                        <button id="copyReferralLinkBtn"
+                                class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition ease-in-out duration-150 shadow-sm flex-shrink-0 hidden">
+                            Copy Link
+                        </button>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">
+                        Your friend can use this link or the code in the inquiry form to claim their discount.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mb-6 no-print">
+                <h2 class="text-2xl font-semibold text-gray-800">Student View - Available Projects</h2>
+                <div class="flex space-x-3">
+                    <button id="viewCartBtn" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition ease-in-out duration-150 shadow-sm flex items-center">
+                        <i class="fas fa-shopping-cart mr-2"></i> View Cart (<span id="cartItemCount">0</span>)
+                    </button>
+                    <button id="directWhatsappBtn" class="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition ease-in-out duration-150 shadow-sm flex items-center">
+                        <i class="fab fa-whatsapp mr-2"></i> Direct Inquiry
+                    </button>
+                </div>
+            </div>
+
+            <!-- Project Filter and Search -->
+            <div class="mb-6 p-4 bg-gray-100 rounded-lg shadow-inner no-print">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="categoryFilter" class="block text-sm font-medium text-gray-700 mb-1">Filter by Category</label>
+                        <select id="categoryFilter" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <option value="">All Categories</option>
+                            <!-- Categories will be dynamically loaded here -->
+                        </select>
+                    </div>
+                    <div>
+                        <label for="projectSearch" class="block text-sm font-medium text-gray-700 mb-1">Search by Project Title</label>
+                        <input type="text" id="projectSearch" placeholder="Search projects..."
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Project List (Cards) -->
+            <div id="studentProjectList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Student project cards will be inserted here by JavaScript -->
+            </div>
+            <div id="noStudentProjectsMessage" class="text-center py-4 text-gray-500 hidden">No projects found matching your criteria.</div>
+
+            <!-- Feedback & Referral Section (Bottom) -->
+            <div class="mt-10 p-6 bg-yellow-50 rounded-lg shadow-inner no-print">
+                <h3 class="text-xl font-semibold text-yellow-800 mb-4">Your Feedback & Referrals Matter!</h3>
+                
+                <div class="mb-6 p-4 bg-yellow-100 rounded-md border border-yellow-200">
+                    <p class="text-gray-700 mb-3">
+                        We'd love your feedback! Post a review to our profile and get a <strong>5% discount</strong> on any project.
+                    </p>
+                    <a href="https://g.page/r/CZxwe-UnodgqEBE/review" target="_blank"
+                       class="inline-flex items-center px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 transition ease-in-out duration-150 shadow-sm">
+                        <i class="fas fa-star mr-2"></i> Leave a Review Now!
+                    </a>
+                </div>
+
+                <div class="p-4 bg-yellow-100 rounded-md border border-yellow-200">
+                    <p class="text-gray-700 mb-3">
+                        Refer a friend and both get a <strong>5% discount</strong> on your projects! Share your unique referral link:
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
+                        <input type="text" id="referralLinkDisplay" readonly placeholder="Click 'Generate' for your link"
+                               class="flex-grow px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-700 sm:text-sm cursor-not-allowed">
+                        <button id="generateReferralLinkBtn"
+                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition ease-in-out duration-150 shadow-sm flex-shrink-0">
+                            Generate Link
+                        </button>
+                        <button id="copyReferralLinkBtn"
+                                class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition ease-in-out duration-150 shadow-sm flex-shrink-0 hidden">
+                            Copy Link
+                        </button>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">
+                        Your friend can use this link or the code in the inquiry form to claim their discount.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cart Modal -->
+        <div id="cartModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white p-6 rounded-lg shadow-xl max-w-2xl w-full mx-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-semibold text-gray-800">Your Cart</h3>
+                    <button id="closeCartModalBtn" class="text-gray-500 hover:text-gray-700 text-3xl leading-none">&times;</button>
+                </div>
+                <div id="cartItemsContainer" class="max-h-80 overflow-y-auto mb-4 border border-gray-200 rounded-md p-2">
+                    <!-- Cart items will be rendered here -->
+                </div>
+                <div class="text-right text-xl font-bold text-gray-800 mb-4">
+                    Total: ₹<span id="cartTotal">0.00</span>
+                </div>
+
+                <!-- Student Inquiry Form -->
+                <div class="mb-4 p-4 bg-gray-50 rounded-lg">
+                    <h4 class="text-lg font-semibold text-gray-800 mb-3">Enter Your Details (for Inquiry)</h4>
+                    <form id="inquiryForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="inquiryName" class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+                            <input type="text" id="inquiryName" required
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="inquiryCollege" class="block text-sm font-medium text-gray-700 mb-1">College Name</label>
+                            <input type="text" id="inquiryCollege"
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="inquiryState" class="block text-sm font-medium text-gray-700 mb-1">State</label>
+                            <input type="text" id="inquiryState"
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="inquiryCity" class="block text-sm font-medium text-gray-700 mb-1">City/Village</label>
+                            <input type="text" id="inquiryCity"
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="inquiryMobile" class="block text-sm font-medium text-gray-700 mb-1">Mobile Number</label>
+                            <input type="tel" id="inquiryMobile" required pattern="[0-9]{10}" placeholder="10 digit mobile number"
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="inquiryEmail" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" id="inquiryEmail"
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="inquiryReferralCode" class="block text-sm font-medium text-gray-700 mb-1">Referral Code (Optional)</label>
+                            <input type="text" id="inquiryReferralCode" placeholder="Enter a referral code if you have one"
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="inquiryMessage" class="block text-sm font-medium text-gray-700 mb-1">Additional Message (Optional)</label>
+                            <textarea id="inquiryMessage" rows="2"
+                                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3 no-print">
+                    <button id="clearCartBtn" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition ease-in-out duration-150 shadow-sm">
+                        Clear Cart
+                    </button>
+                    <button id="sendInquiryBtn" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition ease-in-out duration-150 shadow-sm flex items-center justify-center space-x-2">
+                        <i class="fab fa-whatsapp"></i> <span>Send Inquiry (WhatsApp)</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Detail Modal -->
+        <div id="projectDetailModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full mx-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="projectDetailTitle" class="text-2xl font-semibold text-gray-800"></h3>
+                    <button id="closeProjectDetailModalBtn" class="text-gray-500 hover:text-gray-700 text-3xl leading-none">&times;</button>
+                </div>
+                <p class="text-sm text-gray-600 mb-2">Category: <span id="projectDetailCategory" class="font-medium"></span></p>
+                <p class="text-xl font-bold text-blue-700 mb-4">Cost: ₹<span id="projectDetailCost"></span></p>
+                <p class="text-gray-700 mb-4"><span id="projectDetailDescription"></span></p>
+                <div class="flex justify-end">
+                    <button id="addProjectToCartFromDetailBtn" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition ease-in-out duration-150 shadow-sm flex items-center justify-center space-x-2">
+                        <i class="fas fa-cart-plus"></i> <span>Add to Cart</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message Box for alerts -->
+        <div id="messageBox" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+                <p id="messageBoxContent" class="text-lg font-medium text-gray-800 mb-4"></p>
+                <button id="messageBoxClose" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Constants and Global Variables ---
+        const ADMIN_USERNAME = "warade530";
+        const ADMIN_PASSWORD = "Pass@123";
+        const ADMIN_WHATSAPP_NUMBER = "918446173429"; // Your WhatsApp number without '+'
+        const LOCAL_STORAGE_KEY_PROJECTS = 'diyCircuitsProjects';
+        const LOCAL_STORAGE_KEY_ADMIN_AUTH = 'diyCircuitsAdminAuth';
+        const LOCAL_STORAGE_KEY_STUDENT_CART = 'diyCircuitsStudentCart';
+        const LOCAL_STORAGE_KEY_INQUIRIES = 'diyCircuitsInquiries'; // Key for storing inquiries
+
+        let projects = []; // Main array to store all projects
+        let studentCart = []; // Array to store items in the student's cart
+        let inquiries = []; // Array to store placed inquiries
+        let editingProjectIndex = -1; // -1 means not editing, otherwise stores the index of the project being edited
+
+        // --- DOM Elements ---
+        const loginSection = document.getElementById('loginSection');
+        const adminDashboard = document.getElementById('adminDashboard');
+        const studentDashboard = document.getElementById('studentDashboard');
+        const showLoginBtn = document.getElementById('showLoginBtn');
+        const showStudentBtn = document.getElementById('showStudentBtn');
+        const loginForm = document.getElementById('loginForm');
+        const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+        const adminProjectForm = document.getElementById('adminProjectForm');
+        const adminProjectFormTitle = document.getElementById('adminProjectFormTitle');
+        const adminProjectId = document.getElementById('adminProjectId');
+        const adminProjectCategory = document.getElementById('adminProjectCategory');
+        const adminProjectTitle = document.getElementById('adminProjectTitle');
+        const adminProjectDescription = document.getElementById('adminProjectDescription'); // New description field
+        const adminProjectCost = document.getElementById('adminProjectCost');
+        const submitProjectBtn = document.getElementById('submitProjectBtn');
+        const cancelEditProjectBtn = document.getElementById('cancelEditProjectBtn');
+        const adminProjectTableBody = document.getElementById('adminProjectTableBody');
+        const noAdminProjectsMessage = document.getElementById('noAdminProjectsMessage');
+        const studentProjectList = document.getElementById('studentProjectList');
+        const noStudentProjectsMessage = document.getElementById('noStudentProjectsMessage');
+        const viewCartBtn = document.getElementById('viewCartBtn');
+        const cartItemCount = document.getElementById('cartItemCount');
+        const cartModal = document.getElementById('cartModal');
+        const closeCartModalBtn = document.getElementById('closeCartModalBtn');
+        const cartItemsContainer = document.getElementById('cartItemsContainer');
+        const cartTotal = document.getElementById('cartTotal');
+        const clearCartBtn = document.getElementById('clearCartBtn');
+        const sendInquiryBtn = document.getElementById('sendInquiryBtn'); 
+
+        // Inquiry form fields
+        const inquiryName = document.getElementById('inquiryName');
+        const inquiryCollege = document.getElementById('inquiryCollege');
+        const inquiryState = document.getElementById('inquiryState');
+        const inquiryCity = document.getElementById('inquiryCity');
+        const inquiryMobile = document.getElementById('inquiryMobile');
+        const inquiryEmail = document.getElementById('inquiryEmail');
+        const inquiryReferralCode = document.getElementById('inquiryReferralCode');
+        const inquiryMessage = document.getElementById('inquiryMessage');
+
+        // Referral elements
+        const generateReferralLinkBtn = document.getElementById('generateReferralLinkBtn');
+        const referralLinkDisplay = document.getElementById('referralLinkDisplay');
+        const copyReferralLinkBtn = document.getElementById('copyReferralLinkBtn');
+
+        const messageBox = document.getElementById('messageBox');
+        const messageBoxContent = document.getElementById('messageBoxContent');
+        const messageBoxClose = document.getElementById('messageBoxClose');
+
+        // Admin sub-section elements
+        const adminProjectsManagement = document.getElementById('adminProjectsManagement');
+        const adminInquiriesView = document.getElementById('adminInquiriesView'); 
+        const showAdminProjectsBtn = document.getElementById('showAdminProjectsBtn');
+        const showAdminInquiriesBtn = document.getElementById('showAdminInquiriesBtn'); 
+        const adminInquiriesTableBody = document.getElementById('adminInquiriesTableBody'); 
+        const noInquiriesMessage = document.getElementById('noInquiriesMessage'); 
+        const newInquiriesBadge = document.getElementById('newInquiriesBadge'); 
+        const clearAllInquiriesBtn = document.getElementById('clearAllInquiriesBtn'); 
+
+        const categoryFilter = document.getElementById('categoryFilter');
+        const projectSearch = document.getElementById('projectSearch');
+
+        // Project Detail Modal elements
+        const projectDetailModal = document.getElementById('projectDetailModal');
+        const closeProjectDetailModalBtn = document.getElementById('closeProjectDetailModalBtn');
+        const projectDetailTitle = document.getElementById('projectDetailTitle');
+        const projectDetailCategory = document.getElementById('projectDetailCategory');
+        const projectDetailCost = document.getElementById('projectDetailCost');
+        const projectDetailDescription = document.getElementById('projectDetailDescription');
+        const addProjectToCartFromDetailBtn = document.getElementById('addProjectToCartFromDetailBtn');
+        let currentProjectInDetailModal = null; // To hold the project object for adding to cart from detail modal
+        
+        // New DOM element for direct WhatsApp button
+        const directWhatsappBtn = document.getElementById('directWhatsappBtn');
+
+
+        // --- Project Data (Initial Load) ---
+        // This data will be loaded if LocalStorage is empty.
+        // You can paste your project objects here directly.
+        const initialProjectsData = [
+            // Example project format:
+            { "category": "Control Systems & Automation", "title": "Digital voltmeter/ammeter", "description": "Digital voltmeter and ammeter for electrical measurements.", "cost": 1800 },      
+  { "category": "Communication Systems", "title": "Walkie-talkie circuit", "description": "Basic circuit for two-way voice communication.", "cost": 0 },
+  { "category": "Communication Systems", "title": "FM transmitter/receiver", "description": "Design and build a simple FM radio transmitter and receiver.", "cost": 0 },
+  { "category": "Communication Systems", "title": "Wireless data transfer using nRF24L01 modules", "description": "Implement wireless data communication between microcontrollers using nRF24L01 modules.", "cost": 0 },
+  { "category": "Communication Systems", "title": "LoRaWAN-based long-range communication", "description": "Develop a LoRaWAN node for long-range, low-power data transmission.", "cost": 0 },
+  { "category": "Communication Systems", "title": "Bluetooth communication for data logging", "description": "Set up Bluetooth communication to log sensor data to a smartphone or computer.", "cost": 0 },
+  { "category": "Communication Systems", "title": "RF (Radio Frequency) Based Data Transmission", "description": "Build a system for transmitting and receiving data using basic RF modules.", "cost": 0 },
+  { "category": "Communication Systems", "title": "Bluetooth-Controlled Robot/Device", "description": "Create a robot or device controllable via a Bluetooth app from a smartphone.", "cost": 0 },
+  { "category": "Communication Systems", "title": "LoRa Based Long Range Communication", "description": "Implement long-range communication using LoRa modules for various applications.", "cost": 0 },
+  { "category": "Communication Systems", "title": "Zigbee Mesh Network (Basic)", "description": "Set up a basic Zigbee mesh network for home automation or sensor data collection.", "cost": 0 },
+  { "category": "Communication Systems", "title": "NFC/RFID Reader & Writer", "description": "Build a system to read and write data to NFC/RFID tags.", "cost": 0 },
+  { "category": "Communication Systems", "title": "GSM Based SMS Alert System", "description": "Develop a system that sends SMS alerts using a GSM module based on sensor input.", "cost": 0 },
+  { "category": "Communication Systems", "title": "GPS Tracker with Location SMS", "description": "Create a GPS tracking device that sends its location via SMS.", "cost": 0 },
+  { "category": "Communication Systems", "title": "Wi-Fi Signal Strength Monitor", "description": "Build a device to monitor and display Wi-Fi signal strength in different locations.", "cost": 0 },
+  { "category": "Communication Systems", "title": "Wireless Power Transfer (Inductive Coupling)", "description": "Demonstrate wireless power transfer using inductive coupling principles.", "cost": 0 },
+  { "category": "Communication Systems", "title": "SDR (Software Defined Radio) Basic Applications", "description": "Explore basic applications of Software Defined Radio, such as listening to radio signals.", "cost": 0 },
+  { "category": "Communication Systems", "title": "Fiber optic communication link", "description": "Set up a simple fiber optic link for data transmission.", "cost": 0 },
+  { "category": "Communication Systems", "title": "DTMF (Dual Tone Multi-Frequency) controlled device", "description": "Design a device controlled by DTMF tones from a phone keypad.", "cost": 0 },
+  { "category": "Communication Systems", "title": "RS-232/RS-485 communication interface", "description": "Implement a communication interface using RS-232 or RS-485 protocols.", "cost": 0 },
+  { "category": "Communication Systems", "title": "Visible Light Communication (VLC) system", "description": "Develop a system for transmitting data using visible light.", "cost": 0 },
+  { "category": "Communication Systems", "title": "Ethernet Cable Tester", "description": "Build a device to test the connectivity and wiring of Ethernet cables.", "cost": 0 },
+  { "category": "Communication Systems", "title": "Intercom System", "description": "Design and build a simple two-way intercom system.", "cost": 0 },
+  { "category": "Communication Systems", "title": "Telephone Line Monitor", "description": "Create a device to monitor activity on a telephone line.", "cost": 0 },
+  { "category": "Communication Systems", "title": "Power Line Communication (PLC) for Home Automation", "description": "Explore using existing power lines for data communication in home automation.", "cost": 0 },
+  { "category": "Communication Systems", "title": "CAN Bus Communication (Simulation)", "description": "Simulate CAN bus communication for automotive or industrial applications.", "cost": 0 },
+  { "category": "Communication Systems", "title": "I2C/SPI Sensor Network", "description": "Set up a network of sensors communicating via I2C or SPI protocols.", "cost": 0 },
+  { "category": "Communication Systems", "title": "Simple Dipole antenna design and analysis", "description": "Design, build, and analyze the performance of a simple dipole antenna.", "cost": 0 },
+  { "category": "Communication Systems", "title": "Patch antenna for Wi-Fi applications", "description": "Design and construct a patch antenna suitable for Wi-Fi frequencies.", "cost": 0 },
+  { "category": "Communication Systems", "title": "Yagi-Uda antenna for TV reception", "description": "Build and test a Yagi-Uda antenna for TV signal reception.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "Battery management system (BMS) for Li-ion batteries (basic)", "description": "Develop a basic BMS to monitor and balance Li-ion battery cells.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "EV charging station model", "description": "Create a scaled-down model of an EV charging station.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "Motor driver for electric scooter", "description": "Design and build a motor driver circuit for a small electric scooter.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "Regenerative braking system (model)", "description": "Develop a conceptual model demonstrating regenerative braking.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "BLDC Motor Controller for EV (Small Scale)", "description": "Design a BLDC motor controller for small-scale EV applications.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "Battery Health Monitoring for EV Pack", "description": "Build a system to monitor the health and performance of an EV battery pack.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "Thermal Management for EV Battery (Simulation/Basic)", "description": "Simulate or build a basic thermal management system for EV batteries.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "EV Range Estimator", "description": "Create a device or software to estimate the range of an electric vehicle.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "Pedal-Assist System for Electric Bicycle", "description": "Develop a pedal-assist system for an electric bicycle.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "Electric bicycle conversion", "description": "Convert a regular bicycle into an electric bicycle.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "Solar-powered electric vehicle charging point", "description": "Design a small-scale solar-powered charging point for EVs.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "Energy monitoring for electric vehicles", "description": "Build a system to monitor energy consumption in an electric vehicle.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "Wireless EV Charging (Small Model)", "description": "Demonstrate wireless charging for EVs using a small-scale model.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "Automatic Headlight Dimmer", "description": "Design an automatic headlight dimming system based on ambient light.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "Rain Sensing Wiper System", "description": "Develop a rain-sensing system to control car wipers automatically.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "Car Parking Assist System (Ultrasonic)", "description": "Build a parking assist system using ultrasonic sensors for distance detection.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "Blind Spot Detection System", "description": "Develop a basic blind spot detection system for vehicles.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "Tire Pressure Monitoring System (TPMS)", "description": "Create a system to monitor tire pressure and alert the driver.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "Car Alarm System with SMS Alert", "description": "Design a car alarm system that sends SMS alerts to the owner.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "Keyless Entry System (RFID/NFC)", "description": "Implement a keyless entry system for a car using RFID or NFC.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "Driver Drowsiness Detection System", "description": "Build a system to detect driver drowsiness and provide alerts.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "Seatbelt Reminder System", "description": "Develop an automatic seatbelt reminder system.", "cost": 0 },
+  { "category": "Automotive Electronics & Electric Vehicles (EVs)", "title": "Automatic Emergency Braking System (Concept Model)", "description": "Create a conceptual model of an automatic emergency braking system.", "cost": 0 },
+  { "category": "AI/ML & Image Processing in EE (Advanced Concepts)", "title": "Object Detection for Smart Parking (ESP32-CAM)", "description": "Utilize ESP32-CAM for object detection, specifically for smart parking applications.", "cost": 0 },
+  { "category": "AI/ML & Image Processing in EE (Advanced Concepts)", "title": "Face Recognition for Access Control (Basic)", "description": "Implement a basic face recognition system for access control.", "cost": 0 },
+  { "category": "AI/ML & Image Processing in EE (Advanced Concepts)", "title": "Color Sorting Machine (using Camera)", "description": "Design a machine that sorts objects based on color using a camera and image processing.", "cost": 0 },
+  { "category": "AI/ML & Image Processing in EE (Advanced Concepts)", "title": "Gesture Recognition for Home Automation", "description": "Develop a gesture recognition system to control home appliances.", "cost": 0 },
+  { "category": "AI/ML & Image Processing in EE (Advanced Concepts)", "title": "Smart Security Camera with Object Tracking", "description": "Build a smart security camera with the ability to detect and track objects.", "cost": 0 },
+  { "category": "AI/ML & Image Processing in EE (Advanced Concepts)", "title": "Automated Quality Inspection (Simple defects)", "description": "Create a system for automated quality inspection to detect simple defects in products.", "cost": 0 },
+  { "category": "AI/ML & Image Processing in EE (Advanced Concepts)", "title": "License Plate Recognition (Basic using OpenCV on Raspberry Pi)", "description": "Implement basic license plate recognition using OpenCV on a Raspberry Pi.", "cost": 0 },
+  { "category": "AI/ML & Image Processing in EE (Advanced Concepts)", "title": "Traffic Density Monitoring (Vehicle Counting)", "description": "Develop a system to monitor traffic density by counting vehicles using image processing.", "cost": 0 },
+  { "category": "AI/ML & Image Processing in EE (Advanced Concepts)", "title": "Robot Navigation with Camera (Line following, obstacle avoidance)", "description": "Implement camera-based navigation for robots, including line following and obstacle avoidance.", "cost": 0 },
+  { "category": "AI/ML & Image Processing in EE (Advanced Concepts)", "title": "Plant Disease Detection (Basic Image Analysis)", "description": "Use basic image analysis to detect common plant diseases from leaf images.", "cost": 0 },
+  { "category": "AI/ML & Image Processing in EE (Advanced Concepts)", "title": "Predictive Maintenance for Motors (Anomaly Detection)", "description": "Apply ML for anomaly detection in motor data to predict maintenance needs.", "cost": 0 },
+  { "category": "AI/ML & Image Processing in EE (Advanced Concepts)", "title": "Smart Grid Load Forecasting", "description": "Use ML to forecast electrical load on a smart grid.", "cost": 0 },
+  { "category": "AI/ML & Image Processing in EE (Advanced Concepts)", "title": "Energy Consumption Prediction for Buildings", "description": "Develop an ML model to predict energy consumption in buildings.", "cost": 0 },
+  { "category": "AI/ML & Image Processing in EE (Advanced Concepts)", "title": "Voice Command Recognition for Home Automation", "description": "Implement a voice command recognition system to control smart home devices.", "cost": 0 },
+  { "category": "AI/ML & Image Processing in EE (Advanced Concepts)", "title": "Adaptive Street Lighting (ML for traffic flow)", "description": "Design adaptive street lighting systems that adjust based on real-time traffic flow using ML.", "cost": 0 },
+  { "category": "AI/ML & Image Processing in EE (Advanced Concepts)", "title": "Smart HVAC System (ML for optimal energy use)", "description": "Create a smart HVAC system that uses ML to optimize energy efficiency.", "cost": 0 },
+  { "category": "AI/ML & Image Processing in EE (Advanced Concepts)", "title": "Intrusion Detection System (ML-based on sensor data)", "description": "Develop an ML-based intrusion detection system using various sensor data.", "cost": 0 },
+  { "category": "AI/ML & Image Processing in EE (Advanced Concepts)", "title": "Optimizing Solar Panel Output using ML", "description": "Use ML algorithms to optimize the power output of solar panels.", "cost": 0 },
+  { "category": "AI/ML & Image Processing in EE (Advanced Concepts)", "title": "Smart Healthcare Diagnostics (Basic classification)", "description": "Explore basic classification tasks in healthcare diagnostics using ML.", "cost": 0 },
+  { "category": "AI/ML & Image Processing in EE (Advanced Concepts)", "title": "Pattern Recognition in Sensor Data", "description": "Apply pattern recognition techniques to analyze and interpret sensor data.", "cost": 0 },
+  { "category": "Robotics & Automation", "title": "Line following robot", "description": "Build a robot that can follow a designated line path.", "cost": 0 },
+  { "category": "Robotics & Automation", "title": "Obstacle avoidance robot", "description": "Design a robot capable of detecting and avoiding obstacles in its path.", "cost": 0 },
+  { "category": "Robotics & Automation", "title": "Bluetooth/Wi-Fi controlled robot car", "description": "Create a robot car that can be controlled remotely via Bluetooth or Wi-Fi.", "cost": 0 },
+  { "category": "Robotics & Automation", "title": "Gesture-controlled robot", "description": "Develop a robot that responds to specific hand gestures for control.", "cost": 0 },
+  { "category": "Robotics & Automation", "title": "Robotic arm control (2-DOF, 3-DOF)", "description": "Build and control a robotic arm with 2 or 3 degrees of freedom.", "cost": 0 },
+  { "category": "Robotics & Automation", "title": "Sumo fighting robot", "description": "Design and construct a robot for sumo-style competitions.", "cost": 0 },
+  { "category": "Robotics & Automation", "title": "Pick and place robot using image processing", "description": "Create a robot that can pick and place objects using computer vision.", "cost": 0 },
+  { "category": "Robotics & Automation", "title": "Robotic arm for assembly tasks", "description": "Develop a robotic arm capable of performing simple assembly tasks.", "cost": 0 },
+  { "category": "Robotics & Automation", "title": "Quadrotor/Drone control system", "description": "Build a basic control system for a quadrotor or small drone.", "cost": 0 },
+  { "category": "Robotics & Automation", "title": "SLAM (Simultaneous Localization and Mapping) for mobile robots", "description": "Implement basic SLAM algorithms for a mobile robot to map its environment.", "cost": 0 },
+  { "category": "Robotics & Automation", "title": "Humanoid robot locomotion", "description": "Explore and implement basic locomotion principles for a humanoid robot.", "cost": 0 },
+  { "category": "Audio & Signal Processing", "title": "Audio amplifier circuit (e.g., Class A, Class B, Class D)", "description": "Design and build various types of audio amplifier circuits.", "cost": 0 },
+  { "category": "Audio & Signal Processing", "title": "Audio mixer", "description": "Construct a circuit for mixing multiple audio input signals.", "cost": 0 },
+  { "category": "Audio & Signal Processing", "title": "Graphic equalizer", "description": "Design and build a graphic equalizer for audio frequency manipulation.", "cost": 0 },
+  { "category": "Audio & Signal Processing", "title": "Noise cancellation system (basic)", "description": "Develop a basic active noise cancellation system.", "cost": 0 },
+  { "category": "Audio & Signal Processing", "title": "VU meter (Volume Unit meter)", "description": "Build a VU meter to display audio signal levels.", "cost": 0 },
+  { "category": "Audio & Signal Processing", "title": "Digital filter design (FIR, IIR)", "description": "Implement digital filters (FIR or IIR) in software for signal processing.", "cost": 0 },
+  { "category": "Audio & Signal Processing", "title": "DFT/FFT implementation (software based)", "description": "Write software to perform Discrete Fourier Transform or Fast Fourier Transform.", "cost": 0 },
+  { "category": "Audio & Signal Processing", "title": "Audio effects processor (e.g., reverb, echo)", "description": "Create a digital or analog circuit for common audio effects like reverb or echo.", "cost": 0 },
+  { "category": "Audio & Signal Processing", "title": "Speech recognition (simple, command-based)", "description": "Develop a simple, command-based speech recognition system.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Smart Waste Management System", "description": "Design an IoT system for monitoring waste levels and optimizing collection routes.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Intelligent Street Lighting (Adaptive to pedestrians/vehicles)", "description": "Develop a street lighting system that adjusts intensity based on traffic and pedestrian presence.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Smart Public Transportation Tracking", "description": "Create a system to track public transportation in real-time.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Noise Pollution Monitoring System", "description": "Build a system to monitor and record noise pollution levels.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Smart Drainage System Monitoring", "description": "Design a system to monitor drainage levels and detect blockages.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Air Quality Monitoring Network", "description": "Set up a network of sensors to monitor air quality in different areas.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Smart Parking with Real-Time Occupancy", "description": "Implement a smart parking system that shows real-time occupancy.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Smart Urban Gardening System", "description": "Develop an automated system for urban gardening, controlling watering and lighting.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Public Safety Monitoring", "description": "Design a system for monitoring public spaces for safety and security.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Urban Energy Management System", "description": "Create a system to monitor and manage energy consumption in an urban area.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Programmable Load Timer", "description": "Build a programmable timer to control electrical loads.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Automatic Power Factor Improvement for Small Inductive Loads", "description": "Design a system to automatically improve the power factor for small inductive loads.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Energy Audit Tool", "description": "Develop a device or software tool for performing energy audits.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Standby Power Killer/Vampire Load Eliminator", "description": "Create a device to detect and eliminate standby power consumption.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Adaptive Lighting Control (Daylight Harvesting)", "description": "Design an lighting system that adapts to available daylight for energy saving.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Intelligent HVAC Control", "description": "Develop an intelligent control system for HVAC (Heating, Ventilation, and Air Conditioning).", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Energy Harvesting from Vibrations (Piezos)", "description": "Experiment with harvesting energy from vibrations using piezoelectric materials.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Energy Harvesting from RF Signals (Basic)", "description": "Explore basic methods of harvesting energy from ambient RF signals.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Efficient LED Driver Design", "description": "Design an efficient driver circuit for LED lighting.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Smart Grid Energy Optimization Model", "description": "Develop a model for optimizing energy distribution and consumption in a smart grid.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Logic Gate Trainer Kit", "description": "Build a trainer kit to demonstrate the operation of various logic gates.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Microcontroller Programming Trainer Kit", "description": "Create a kit to help learn microcontroller programming.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Basic Circuit Simulator (Software)", "description": "Develop a simple software-based circuit simulator.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Breadboard Power Supply with Multiple Outputs", "description": "Build a versatile power supply for breadboard projects with multiple voltage outputs.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Component Identification Tool", "description": "Create a device to identify electronic components and their values.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Resistor Color Code Calculator (Hardware)", "description": "Build a hardware device that calculates resistor values from color codes.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Diode/Transistor Characteristic Curve Tracer", "description": "Design a circuit to plot the characteristic curves of diodes and transistors.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "Small Transformer Design and Testing Kit", "description": "Create a kit for designing and testing small transformers.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "RLC Circuit Response Demonstrator", "description": "Build a demonstrator for the transient and steady-state responses of RLC circuits.", "cost": 0 },
+  { "category": "Miscellaneous & Innovative Concepts", "title": "DIY Function Generator", "description": "Build a simple, low-cost function generator.", "cost": 0 },
+  { "category": "IoT", "title": "IOT IV Bag Monitoring and Alert System", "description": "IoT system to monitor IV bag levels in hospitals, sending alerts to nurses via SMS when low.", "cost": 0 },
+  { "category": "IoT", "title": "Mountain Climber Health & GPS Tracker", "description": "Wearable IoT device to monitor climbers vitals and GPS location, with emergency alerts.", "cost": 0 },
+  { "category": "IoT", "title": "IOT Smart Parking Using RFID With Android App", "description": "IoT and RFID-based parking system with an Android app for slot booking and availability.", "cost": 0 },
+  { "category": "IoT", "title": "IOT Covid Patient Health Monitor in Quarantine", "description": "IoT device to monitor quarantined patients vitals (pulse, temperature) with cloud syncing.", "cost": 0 },
+  { "category": "IoT", "title": "IOT based Manhole Detection and Monitoring System", "description": "IoT sensors to detect open manholes and monitor their status, with alerts to authorities.", "cost": 0 },
+  { "category": "IoT", "title": "IOT based Smart Energy Meter Monitoring with Theft Detection", "description": "IoT energy meter to monitor usage and detect theft, with real-time data on a web app.", "cost": 0 },
+  { "category": "IoT", "title": "IOT based Three Phase Power Failure Monitoring with SMS Alerts", "description": "IoT system to monitor three-phase power supply and send SMS alerts on failures.", "cost": 0 },
+  { "category": "IoT", "title": "IOT based Intelligent Gas Leakage Detector Using Arduino", "description": "IoT device with gas sensor to detect leaks and send alerts via WiFi.", "cost": 0 },
+  { "category": "IoT", "title": "IOT based Smart Agriculture Monitoring System Project", "description": "IoT sensors for soil moisture, temperature, and humidity, with a mobile app for farmers.", "cost": 0 },
+  { "category": "IoT", "title": "IOT Based Automatic Vehicle Accident Detection and Rescue System", "description": "IoT system with accelerometer and GPS to detect accidents and alert emergency services.", "cost": 0 },
+  { "category": "IoT", "title": "Gas Leakage Detection with Buzzer System using Atmega", "description": "Atmega-based gas leakage detector with buzzer alerts and IoT connectivity.", "cost": 0 },
+  { "category": "IoT", "title": "Greenhouse Monitoring and Control System using IOT Project", "description": "IoT system to monitor and control greenhouse conditions (temperature, humidity, light).", "cost": 0 },
+  { "category": "IoT", "title": "IOT Based Coal Mine Safety Monitoring and Alerting System", "description": "IoT sensors to monitor mine conditions (gas, temperature) and alert workers of dangers.", "cost": 0 },
+  { "category": "IoT", "title": "Raspberry Pi based Weather Reporting Over IOT", "description": "Raspberry Pi with sensors to monitor and report weather data over IoT.", "cost": 0 },
+  { "category": "IoT", "title": "IOT Early Flood Detection & Avoidance", "description": "IoT water level sensors to detect floods and send early warnings to communities.", "cost": 0 },
+  { "category": "IoT", "title": "IOT Garbage Monitoring Using Raspberry Pi", "description": "Raspberry Pi-based IoT system to monitor garbage bin levels and notify authorities.", "cost": 0 },
+  { "category": "IoT", "title": "IOT Circuit Breaker Project", "description": "IoT-based circuit breaker to remotely control and monitor electrical circuits.", "cost": 0 },
+  { "category": "IoT", "title": "IOT Mining Tracking & Worker Safety Helmet", "description": "IoT-enabled helmet with GPS and vitals monitoring for miner safety.", "cost": 0 },
+  { "category": "IoT", "title": "IOT Prison Break Monitoring & Alerting System", "description": "IoT system to monitor prison security and alert authorities of breaches.", "cost": 0 },
+  { "category": "IoT", "title": "Raspberry Pi Air and Noise Pollution Monitoring System Over IOT", "description": "Raspberry Pi-based IoT system to monitor air and noise pollution with web dashboard.", "cost": 0 },
+  { "category": "IoT", "title": "IOT Energy Meter with Current, Voltage and cost Monitoring System", "description": "IoT energy meter to track current, voltage, and cost, with app integration.", "cost": 0 },
+  { "category": "IoT", "title": "IOT Industry Protection System Arduino", "description": "Arduino-based IoT system to monitor industrial parameters and ensure safety.", "cost": 0 },
+  { "category": "IoT", "title": "IOT Paralysis Patient Health Care Project", "description": "IoT wearable to monitor paralysis patients vitals and alert caregivers.", "cost": 0 },
+  { "category": "IoT", "title": "IOT Car Parking System", "description": "IoT system to monitor and manage car parking slots with real-time updates.", "cost": 0 },
+  { "category": "IoT", "title": "Smart Dustbin with IOT Notifications", "description": "IoT-enabled dustbin to notify when full, with app integration.", "cost": 0 },
+  { "category": "IoT", "title": "IOT Asset tracking System", "description": "IoT system with GPS to track assets in real-time via a mobile app.", "cost": 0 },
+  { "category": "IoT", "title": "Biometric Attendance System Over IOT", "description": "IoT and biometric-based attendance system with cloud storage.", "cost": 0 },
+  { "category": "IoT", "title": "IOT Irrigation Monitoring & Controller System", "description": "IoT system to monitor soil moisture and control irrigation pumps.", "cost": 0 },
+  { "category": "IoT", "title": "IOT Electronic Door Opener", "description": "IoT-based door opener with remote control via a mobile app.", "cost": 0 },
+  { "category": "IoT", "title": "IOT Liquid Level Monitoring System", "description": "IoT system to monitor liquid levels in tanks with alerts for low levels.", "cost": 0 },
+  { "category": "IoT", "title": "IOT Garbage Monitoring System", "description": "IoT system to monitor garbage levels in bins with real-time notifications.", "cost": 0 },
+  { "category": "IoT", "title": "Smart Indoor Air Purifier Controller", "description": "IoT system using ESP32 to monitor air quality and control a purifier via Blynk app.", "cost": 0 },
+  { "category": "IoT", "title": "IoT-Based Smart Fridge Monitor", "description": "ESP32-based system to track fridge temperature and send alerts for spoilage risk.", "cost": 0 },
+  { "category": "IoT", "title": "Smart Water Tank Overflow Preventer", "description": "IoT device using Arduino and ultrasonic sensor to monitor water levels and prevent overflow.", "cost": 0 },
+  { "category": "IoT", "title": "IoT Smart Doorbell with Camera", "description": "ESP32-CAM-based doorbell with motion detection and live feed to a mobile app.", "cost": 0 },
+  { "category": "IoT", "title": "Smart Pet Feeder with IoT", "description": "IoT system using Raspberry Pi Pico to schedule and monitor pet feeding remotely.", "cost": 0 },
+  { "category": "IoT", "title": "IoT-Based Smart Locker System", "description": "IoT-enabled lockers with OTP access for secure package delivery.", "cost": 0 },
+  { "category": "IoT", "title": "IoT Smart Window Blinds", "description": "IoT system using Arduino to control window blinds based on light intensity.", "cost": 0 },
+  { "category": "IoT", "title": "IoT-Based Smart Noise Monitor", "description": "ESP32 with sound sensor to monitor noise levels and send alerts.", "cost": 0 },
+  { "category": "IoT", "title": "IoT Smart Bike Tracker", "description": "IoT device with GPS to track bicycles and alert owners of theft.", "cost": 0 },
+  { "category": "IoT", "title": "IoT-Based Smart Retail Analytics", "description": "IoT sensors to track customer footfall in stores with real-time analytics.", "cost": 0 },
+  { "category": "IoT", "title": "IoT Smart Water Purifier Monitor", "description": "IoT system using ESP32 to monitor water purifier performance and quality.", "cost": 0 },
+  { "category": "IoT", "title": "IoT-Based Smart Classroom Controller", "description": "IoT system to manage classroom lighting and ventilation via a mobile app.", "cost": 0 },
+  { "category": "IoT", "title": "IoT Smart Street Signage", "description": "IoT-enabled digital signage with remote content updates via WiFi.", "cost": 0 },
+  { "category": "IoT", "title": "IoT-Based Smart Pet Collar", "description": "IoT collar with GPS and health sensors for real-time pet monitoring.", "cost": 0 },
+  { "category": "IoT", "title": "IoT Smart Thermostat", "description": "IoT system using ESP32 to control room temperature with app integration.", "cost": 0 },
+  { "category": "IoT", "title": "IoT-Based Smart Elevator Monitor", "description": "IoT system to monitor elevator usage and maintenance needs.", "cost": 0 },
+  { "category": "IoT", "title": "IoT Smart Vending Machine", "description": "IoT system to monitor vending machine stock and enable cashless payments.", "cost": 0 },
+  { "category": "IoT", "title": "IoT-Based Smart Waste Recycler", "description": "IoT sensors to monitor and sort recyclable waste with app notifications.", "cost": 0 },
+  { "category": "IoT", "title": "IoT Smart Greenhouse Controller", "description": "IoT system to automate greenhouse temperature, humidity, and irrigation.", "cost": 0 },
+  { "category": "IT", "title": "IOT Home Automation", "description": "IoT system to control home appliances (lights, fans) via a mobile app.", "cost": 0 },
+  { "category": "IT", "title": "IOT Office Automation", "description": "IoT system to automate office appliances with scheduling and remote control.", "cost": 0 },
+  { "category": "IT", "title": "IOT Industry Automation", "description": "IoT system to automate industrial processes with real-time monitoring.", "cost": 0 },
+  { "category": "IT", "title": "IOT Weather Reporting System", "description": "IoT-based weather station to report temperature, humidity, and pressure.", "cost": 0 },
+  { "category": "IT", "title": "IOT Based Antenna Positioning System", "description": "IoT system to control antenna positioning for optimal signal strength.", "cost": 0 },
+  { "category": "IT", "title": "IOT Based Fire Department Alerting System", "description": "IoT system to detect fires and alert fire departments with location data.", "cost": 0 },
+  { "category": "IT", "title": "IOT Solar Power Monitoring System", "description": "IoT system to monitor solar panel performance and energy output.", "cost": 0 },
+  { "category": "IT", "title": "IOT Traffic Signal Monitoring & Controller System", "description": "IoT system to monitor and control traffic signals based on density.", "cost": 0 },
+  { "category": "IT", "title": "IOT Underground Cable Fault Detector Project", "description": "IoT system to detect faults in underground cables with location alerts.", "cost": 0 },
+  { "category": "IT", "title": "IOT Air & Sound Pollution Monitoring System", "description": "IoT system to monitor air and sound pollution with real-time data.", "cost": 0 },
+  { "category": "IT", "title": "Energy Meter Monitoring Over IOT", "description": "IoT energy meter to monitor and display usage on a web app.", "cost": 0 },
+  { "category": "IT", "title": "IOT Based Person/Wheelchair Fall Detection", "description": "IoT wearable to detect falls and send emergency alerts.", "cost": 0 },
+  { "category": "IT", "title": "IOT Patient Health Monitoring Project", "description": "IoT system to monitor patient vitals and sync data to a cloud server.", "cost": 0 },
+  { "category": "IT", "title": "IOT Heart Attack Detection & Heart Rate Monitor", "description": "IoT wearable to detect heart attacks and monitor heart rate.", "cost": 0 },
+  { "category": "IT", "title": "IOT Based Toll Booth Manager System", "description": "IoT system to automate toll collection with vehicle tracking.", "cost": 0 },
+  { "category": "IT", "title": "Smart Task Scheduler Web App", "description": "Web app to create and manage daily tasks with priority settings and email reminders.", "cost": 0 },
+  { "category": "IT", "title": "Crowdsourced Local Event Finder", "description": "Mobile app to discover nearby events based on user submissions and geolocation.", "cost": 0 },
+  { "category": "IT", "title": "Budget Tracker with UPI Integration", "description": "Web app to track expenses and integrate UPI payments via Razorpay.", "cost": 0 },
+  { "category": "IT", "title": "Online Study Notes Sharing Platform", "description": "Web app for students to upload and share study notes with search functionality.", "cost": 0 },
+  { "category": "IT", "title": "Real-Time Public Transport Delay Alert", "description": "Mobile app to report and view real-time public transport delays using crowdsourced data.", "cost": 0 },
+  { "category": "IT", "title": "Personal Portfolio Builder Web App", "description": "Web app to create customizable portfolios with drag-and-drop templates.", "cost": 0 },
+  { "category": "IT", "title": "Crowdsourced Food Donation Connector", "description": "App to connect restaurants with NGOs for food donations with location-based matching.", "cost": 0 },
+  { "category": "IT", "title": "Smart Resume Generator Web App", "description": "Web app to create ATS-optimized resumes with keyword suggestions.", "cost": 0 },
+  { "category": "IT", "title": "Local Business Review Platform", "description": "Mobile app for users to review and rate local businesses with geolocation.", "cost": 0 },
+  { "category": "IT", "title": "Virtual Study Group Organizer", "description": "Web app for scheduling and managing virtual study groups with chat integration.", "cost": 0 },
+  { "category": "IT", "title": "Crowdsourced Traffic Alert App", "description": "App to report road accidents or traffic jams with real-time updates.", "cost": 0 },
+  { "category": "IT", "title": "Smart Bill Splitter App", "description": "Mobile app to split bills among friends with UPI payment integration.", "cost": 0 },
+  { "category": "IT", "title": "Online Quiz Maker Web App", "description": "Web app for teachers to create and share quizzes with auto-grading.", "cost": 0 },
+  { "category": "IT", "title": "Lost and Found Community App", "description": "Mobile app to report and find lost items in a local community.", "cost": 0 },
+  { "category": "IT", "title": "Smart Event RSVP System", "description": "Web app for creating and managing event invitations with QR code check-ins.", "cost": 0 },
+  { "category": "IT", "title": "Crowdsourced Public Safety App", "description": "App to report unsafe areas or incidents with map-based alerts.", "cost": 0 },
+  { "category": "IT", "title": "Online Voting Poll Creator", "description": "Web app to create and share polls for community or team decisions.", "cost": 0 },
+  { "category": "IT", "title": "Smart Travel Budget Planner", "description": "Mobile app to plan trips with budget tracking and local deals.", "cost": 0 },
+  { "category": "IT", "title": "Community Job Board Web App", "description": "Web app to post and find local freelance or part-time jobs.", "cost": 0 },
+  { "category": "IT", "title": "Smart Feedback Collector App", "description": "Mobile app for businesses to collect customer feedback with analytics.", "cost": 0 },
+  { "category": "IT", "title": "Virtual Book Club Platform", "description": "Web app to organize book discussions and share reading lists.", "cost": 0 },
+  { "category": "IT", "title": "Crowdsourced Local Deals Finder", "description": "Mobile app to find and share local discounts and offers.", "cost": 0 },
+  { "category": "IT", "title": "Smart Meeting Scheduler", "description": "Web app to schedule meetings with calendar integration and reminders.", "cost": 0 },
+  { "category": "IT", "title": "Community Feedback Portal", "description": "App for residents to submit feedback to local authorities with tracking.", "cost": 0 },
+  { "category": "IT", "title": "Smart Expense Tracker for Students", "description": "Mobile app to help students manage budgets with savings tips.", "cost": 0 },
+  { "category": "AI/ML", "title": "Smart Plant Disease Detector", "description": "ML model on Raspberry Pi Pico to detect plant diseases via leaf images.", "cost": 0 },
+  { "category": "AI/ML", "title": "Voice-Controlled Task Manager", "description": "App with speech-to-text ML model to add tasks via voice commands.", "cost": 0 },
+  { "category": "AI/ML", "title": "Smart Waste Sorting Classifier", "description": "ML model on Arduino to classify waste (plastic/organic) using sensor data.", "cost": 0 },
+  { "category": "AI/ML", "title": "AI-Based Mood Detector", "description": "Web app using NLP to analyze text inputs and suggest mood-based activities.", "cost": 0 },
+  { "category": "AI/ML", "title": "Smart Traffic Density Predictor", "description": "ML model to predict traffic density using historical data, displayed on LCD.", "cost": 0 },
+  { "category": "AI/ML", "title": "AI-Based Handwriting Recognizer", "description": "App to recognize handwritten digits using a pre-trained ML model.", "cost": 0 },
+  { "category": "AI/ML", "title": "Smart Energy Usage Predictor", "description": "ML model on ESP32 to predict appliance energy consumption.", "cost": 0 },
+  { "category": "AI/ML", "title": "AI-Based Gesture Recognizer", "description": "Arduino-based ML model to recognize hand gestures for device control.", "cost": 0 },
+  { "category": "AI/ML", "title": "Smart Crop Yield Predictor", "description": "ML model to predict crop yields based on soil and weather data.", "cost": 0 },
+  { "category": "AI/ML", "title": "AI-Powered Chatbot for FAQs", "description": "Web app with NLP-based chatbot for answering common queries.", "cost": 0 },
+  { "category": "AI/ML", "title": "Smart Air Quality Predictor", "description": "ML model on ESP32 to predict air quality using sensor data.", "cost": 0 },
+  { "category": "AI/ML", "title": "AI-Based Text Summarizer", "description": "Web app to summarize long texts using NLP techniques.", "cost": 0 },
+  { "category": "AI/ML", "title": "Smart Parking Space Predictor", "description": "ML model to predict parking space availability using sensor data.", "cost": 0 },
+  { "category": "AI/ML", "title": "AI-Based Emotion Detector", "description": "App to detect emotions from voice inputs using ML models.", "cost": 0 },
+  { "category": "AI/ML", "title": "Smart Water Quality Predictor", "description": "ML model on Raspberry Pi Pico to predict water quality from sensor data.", "cost": 0 },
+  { "category": "AI/ML", "title": "AI-Based Sign Language Recognizer", "description": "App to recognize sign language gestures using ML and camera input.", "cost": 0 },
+  { "category": "AI/ML", "title": "Smart Power Failure Predictor", "description": "ML model on ESP32 to predict power failures using voltage data.", "cost": 0 },
+  { "category": "AI/ML", "title": "AI-Based Fake News Detector", "description": "Web app to detect fake news using NLP techniques.", "cost": 0 },
+  { "category": "AI/ML", "title": "Smart Temperature Predictor", "description": "ML model to predict room temperature using sensor data.", "cost": 0 },
+  { "category": "AI/ML", "title": "AI-Based Object Counter", "description": "ML model on Raspberry Pi Pico to count objects using IR sensors.", "cost": 0 },
+  { "category": "AI/ML", "title": "AI-Powered Plant Health Analyzer", "description": "ML model on Arduino to analyze plant health using sensor data.", "cost": 0 },
+  { "category": "AI/ML", "title": "AI-Based Voice Command Classifier", "description": "App to classify voice commands for home automation using ML.", "cost": 0 },
+  { "category": "AI/ML", "title": "Smart Traffic Flow Optimizer", "description": "ML model to optimize traffic flow using sensor data and Arduino.", "cost": 0 },
+  { "category": "AI/ML", "title": "AI-Powered Text Translator", "description": "Web app to translate text in real-time using NLP models.", "cost": 0 },
+  { "category": "AI/ML", "title": "Smart Gesture-Based Light Controller", "description": "ML model on ESP32 to control lights via gestures.", "cost": 0 },    
+  { "category": "Arduino", "title": "Motorized Solar Scarecrow Bird Animal Repellent", "description": "Arduino-based motorized scarecrow with solar power to repel birds.", "cost": 0 },
+   { "category": "Arduino", "title": "Arduino Stepper Motor Controller", "description": "Arduino system to control stepper motors for precise positioning.", "cost": 0 },
+   { "category": "Arduino", "title": "Portable PM10 PM2.5 Pollution Analyzer", "description": "Arduino-based device to measure PM10/PM2.5 levels with display.", "cost": 0 },
+  { "category": "Arduino", "title": "Portable Induction Cooktop with Time & Temperature Settings", "description": "Arduino-based cooktop with programmable settings for cooking.", "cost": 0 },
+  { "category": "Arduino", "title": "Barcode Scanner & Display using Arduino", "description": "Arduino system to scan barcodes and display product details.", "cost": 0 },
+  { "category": "Arduino", "title": "Gesture Control Bicycle Indicator Gloves", "description": "Arduino-based gloves with gesture control for bike indicators.", "cost": 0 },
+  { "category": "Arduino", "title": "Wireless Master Joystick Controller for Robotics", "description": "Arduino-based joystick for wireless robot control.", "cost": 0 },
+  { "category": "Arduino", "title": "Automatic Noise Level Monitor & Controller System", "description": "Arduino system to monitor and control noise levels with alerts.", "cost": 0 },
+  { "category": "Arduino", "title": "Automatic Indoor Hydroponic Plant Grow Pot", "description": "Arduino-based hydroponic system for automated plant growth.", "cost": 0 },
+  { "category": "Arduino", "title": "Gesture Control Bluetooth Speaker", "description": "Arduino-based speaker with gesture control for volume and playback.", "cost": 0 },
+  { "category": "Arduino", "title": "Programmable Robotic Arm Using Arduino", "description": "Arduino-controlled robotic arm for pick-and-place tasks.", "cost": 0 },
+  { "category": "Arduino", "title": "Arduino based Alcohol Sense Engine Lock", "description": "Arduino system to lock vehicle engines if alcohol is detected.", "cost": 0 },
+  { "category": "Arduino", "title": "Arduino Covid Disinfection Box", "description": "Arduino-based box for UV disinfection of objects.", "cost": 0 },
+  { "category": "Arduino", "title": "Dry Handwashing Machine by Fog Disinfection", "description": "Arduino system for fog-based hand disinfection.", "cost": 0 },
+  { "category": "Arduino", "title": "Automatic Hydroponic Fodder Grow Chamber", "description": "Arduino-based chamber for automated fodder growth.", "cost": 0 },
+  { "category": "Arduino", "title": "Auto Temperature Detector for Entrance for Covid Safety", "description": "Arduino-based temperature scanner for entrance safety checks.", "cost": 0 },
+  { "category": "Arduino", "title": "Arduino-Based Smart Light Dimmer", "description": "Arduino system to control light intensity using a potentiometer and PWM.", "cost": 0 },
+  { "category": "Arduino", "title": "Arduino Gesture-Based Fan Controller", "description": "Arduino with MPU6050 to control fan speed via hand gestures.", "cost": 0 },
+  { "category": "Arduino", "title": "Arduino Soil Nutrient Monitor", "description": "Arduino with sensors to measure soil pH and nutrients, displayed on LCD.", "cost": 0 },
+  { "category": "Arduino", "title": "Arduino Smart Mirror Display", "description": "Arduino-based mirror with OLED display for time, weather, and notifications.", "cost": 0 },
+  { "category": "Arduino", "title": "Arduino Voice-Activated Switch", "description": "Arduino with voice recognition module to control appliances.", "cost": 0 },
+  { "category": "Arduino", "title": "Arduino Smart Door Sensor", "description": "Arduino with magnetic sensor to detect door opening and send alerts.", "cost": 0 },
+  { "category": "Arduino", "title": "Arduino-Based Water Flow Meter", "description": "Arduino with flow sensor to measure and display water usage.", "cost": 0 },
+  { "category": "Arduino", "title": "Arduino Smart Fan Speed Controller", "description": "Arduino with temperature sensor to adjust fan speed automatically.", "cost": 0 },
+  { "category": "Arduino", "title": "Arduino-Based Motion Alarm", "description": "Arduino with PIR sensor to detect motion and trigger an alarm.", "cost": 0 },
+  { "category": "Arduino", "title": "Arduino Smart Plant Waterer", "description": "Arduino with soil moisture sensor to automate plant watering.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Car Safety System with Airbag Notification", "description": "Raspberry Pi system to detect crashes and notify emergency services.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Wearable Computer with Temperature Distance Sensors", "description": "Raspberry Pi-based wearable to monitor temperature and distance.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Driver Drowsiness Detection System for Accident Prevention", "description": "Raspberry Pi with camera to detect driver drowsiness and alert.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Raspberry Pi Based Vehicle Starter on Face Detection", "description": "Raspberry Pi system to start vehicles using face recognition.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Speaking System for Mute People Using Hand Gestures", "description": "Raspberry Pi system to convert gestures to speech for mute individuals.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Object Tracker and Follower Robot", "description": "Raspberry Pi-based robot to track and follow objects using a camera.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Raspberry Pi Based Reader for Blind", "description": "Raspberry Pi system to convert text to speech for visually impaired users.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Raspberry Pi Based Vehicle Number Plate Recognition", "description": "Raspberry Pi with camera for vehicle number plate recognition.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Motion Based Time Lapse Camera with Optimized Storage", "description": "Raspberry Pi camera for motion-triggered time-lapse with storage optimization.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Drunk Driving Detection with Car Ignition Locking Using Raspberry Pi", "description": "Raspberry Pi system to detect alcohol and lock car ignition.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Camera Based Surveillance System Using Raspberry Pi", "description": "Raspberry Pi-based surveillance system with live feed and alerts.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Linux based Speaking Medication Reminder Robot Using Raspberry Pi", "description": "Raspberry Pi robot to remind patients of medication schedules.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Image Processing Based Fire Detection System Using Raspberry Pi", "description": "Raspberry Pi with camera to detect fires using image processing.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Raspberry Pi Smart Home Dashboard", "description": "Raspberry Pi-based dashboard to monitor and control home appliances.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Raspberry Pi Face Recognition Lock", "description": "Raspberry Pi with camera module for face recognition-based door lock.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Raspberry Pi Smart Weather Station", "description": "Raspberry Pi with sensors to monitor and log weather data to a web server.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Raspberry Pi Voice Assistant", "description": "Raspberry Pi-based voice assistant for home automation using Python.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Raspberry Pi Smart Irrigation Controller", "description": "Raspberry Pi system to automate irrigation based on soil and weather data.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Raspberry Pi Smart Pet Monitor", "description": "Raspberry Pi with camera to monitor pets and send alerts via app.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Raspberry Pi Motion-Based Light Controller", "description": "Raspberry Pi with PIR sensor to control lights based on motion.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Raspberry Pi Smart Door Camera", "description": "Raspberry Pi with camera for remote door monitoring via a web app.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Raspberry Pi Air Quality Logger", "description": "Raspberry Pi with air quality sensor to log and display pollution data.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Raspberry Pi Smart Thermometer", "description": "Raspberry Pi with temperature sensor for real-time monitoring via app.", "cost": 0 },
+  { "category": "Raspberry Pi", "title": "Raspberry Pi Gesture-Controlled Robot", "description": "Raspberry Pi with camera to control a robot using hand gestures.", "cost": 0 },
+  { "category": "Solar Energy", "title": "Solar Wireless Electric Vehicle Charging System", "description": "Solar-powered system to charge EVs wirelessly using Arduino.", "cost": 0 },
+  { "category": "Solar Energy", "title": "Solar Power Bank with Wireless Charging", "description": "Solar-powered power bank with wireless charging capability.", "cost": 0 },
+  { "category": "Solar Energy", "title": "RF Controlled Solar Panel Based Robotic Vehicle", "description": "Solar-powered robotic vehicle with RF control.", "cost": 0 },
+  { "category": "Solar Energy", "title": "Design and Manufacturing of Solar Powered Seed Sprayer Machine", "description": "Solar-powered seed sprayer for agricultural use.", "cost": 0 },
+  { "category": "Solar Energy", "title": "Dual Axis Solar Tracking System with Weather Sensor", "description": "Solar panel tracker with weather sensors for optimal energy capture.", "cost": 0 },
+  { "category": "Solar Energy", "title": "Vertical Axis Wind Turbine with Inverter", "description": "Solar and wind-powered turbine with inverter for energy storage.", "cost": 0 },
+  { "category": "Solar Energy", "title": "Sun Tracker Solar Panel", "description": "Solar panel with Arduino-based sun tracking for maximum efficiency.", "cost": 0 },
+  { "category": "Solar Energy", "title": "Irrigation System running on Solar Power", "description": "Solar-powered irrigation system with automated pump control.", "cost": 0 },
+  { "category": "Solar Energy", "title": "System To Measure Solar Power", "description": "Arduino-based system to measure and display solar power output.", "cost": 0 },
+  { "category": "Solar Energy", "title": "Controlling Solar Energy Charge", "description": "Arduino system to monitor and control solar battery charging.", "cost": 0 },
+  { "category": "Solar Energy", "title": "Dual Power Generation Solar+Windmill System", "description": "Hybrid solar and wind power generation system with Arduino.", "cost": 0 },
+  { "category": "Solar Energy", "title": "Solar-Powered Smart Charger", "description": "Solar-powered USB charger with battery level monitoring using Arduino.", "cost": 0 },
+  { "category": "Solar Energy", "title": "Solar Street Light Controller", "description": "Arduino-based system to control solar street lights with dusk-to-dawn automation.", "cost": 0 },
+  { "category": "Solar Energy", "title": "Solar-Powered Water Heater Monitor", "description": "ESP32 system to monitor and optimize solar water heater performance.", "cost": 0 },
+  { "category": "Solar Energy", "title": "Solar Energy Logger", "description": "Raspberry Pi Pico-based system to log solar panel output on OLED.", "cost": 0 },
+  { "category": "Solar Energy", "title": "Solar-Powered Sensor Node", "description": "Solar-powered IoT node using ESP32 to monitor environmental data.", "cost": 0 },
+  { "category": "Solar Energy", "title": "Solar-Powered Smart Fan", "description": "Solar-powered fan with Arduino-based speed control.", "cost": 0 },
+  { "category": "Solar Energy", "title": "Solar-Powered Water Pump", "description": "Solar-powered pump with Arduino for small-scale irrigation.", "cost": 0 },
+  { "category": "Solar Energy", "title": "Solar-Powered Weather Monitor", "description": "Solar-powered system with sensors to monitor weather parameters.", "cost": 0 },
+  { "category": "Solar Energy", "title": "Solar-Powered LED Display", "description": "Solar-powered LED display for messages using Arduino.", "cost": 0 },
+  { "category": "Solar Energy", "title": "Solar-Powered Battery Monitor", "description": "Arduino-based system to monitor solar battery health and charge.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "Ebike Speed Controller System", "description": "ARM Cortex-based system to control ebike speed with precision.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "Air Water Pollution Sensing Smart Watch", "description": "ARM Cortex wearable to monitor air and water pollution levels.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "Multiple Cities Load Shedding Management Using ARM", "description": "ARM Cortex system to manage power load shedding across cities.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "Gas Leak Detector with Automatic Air Exhaust Using ARM Cortex", "description": "ARM Cortex system to detect gas leaks and activate exhaust.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "Solar Power Measurement System Using ARM Cortex", "description": "ARM Cortex-based system to measure solar power output.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "Accurate Speed Control of Electric Car Using ARM", "description": "ARM Cortex system for precise electric car speed control.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "Synchronized Multiple Motor Speed Controller Using ARM", "description": "ARM Cortex system to synchronize multiple motor speeds.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "ARM Processor Based Antenna Positioning System", "description": "ARM Cortex system to position antennas for optimal signals.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "Collision Detection Robotic Vehicle Using ARM", "description": "ARM Cortex-based robot with collision detection sensors.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "GSM Home Automation Using ARM", "description": "ARM Cortex system for GSM-based home automation.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "Multiple Load Controller for Industry Using ARM Cortex", "description": "ARM Cortex system to control multiple industrial loads.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "ARM Based Liquid Level Detection System", "description": "ARM Cortex system to monitor liquid levels with alerts.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "ARM-Based Smart Thermostat", "description": "ARM Cortex system to control room temperature with WiFi.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "ARM Motion Detector Alarm", "description": "ARM Cortex with PIR sensor for motion detection and SMS alerts.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "ARM-Based Smart Lock", "description": "ARM Cortex system with keypad and WiFi for remote unlocking.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "ARM Energy Consumption Monitor", "description": "ARM Cortex-based device to monitor appliance energy usage.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "ARM Smart Traffic Controller", "description": "ARM Cortex system to manage traffic signals based on vehicle count.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "ARM-Based Smart Fan Controller", "description": "ARM Cortex with temperature sensor to control fan speed.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "ARM Smart Door Lock", "description": "ARM Cortex with biometric sensor for secure door access.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "ARM-Based Water Quality Monitor", "description": "ARM Cortex with sensors to monitor water quality parameters.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "ARM Smart Irrigation System", "description": "ARM Cortex system to automate irrigation with sensor inputs.", "cost": 0 },
+  { "category": "ARM Cortex", "title": "ARM-Based Motion Tracker", "description": "ARM Cortex with accelerometer to track motion and log data.", "cost": 0 },
+  { "category": "RF & RFID", "title": "RFID Token Based Appointment Calling System", "description": "RFID system to manage appointments with token-based calling.", "cost": 0 },
+  { "category": "RF & RFID", "title": "Solar Floor Cleaner Robot", "description": "RFID and solar-powered robot for automated floor cleaning.", "cost": 0 },
+  { "category": "RF & RFID", "title": "Advanced Footstep Power Generation System using RFID for Charging", "description": "RFID-based system to generate power from footsteps for charging.", "cost": 0 },
+  { "category": "RF & RFID", "title": "RFID Based Petrol Pump Automation System", "description": "RFID system to automate fuel dispensing and billing.", "cost": 0 },
+  { "category": "RF & RFID", "title": "Motion controlled pick and place robot with obstacle avoidance", "description": "RFID and motion-controlled robot for pick-and-place tasks.", "cost": 0 },
+  { "category": "RF & RFID", "title": "DTMF & RF Dual Controller Based Robot", "description": "Robot controlled by DTMF and RF signals with Arduino.", "cost": 0 },
+  { "category": "RF & RFID", "title": "RFID Based Smart Master Card for Bus Train Metro Ticketing", "description": "RFID-based ticketing system for public transport.", "cost": 0 },
+  { "category": "RF & RFID", "title": "Multi Robot Coordination for Swarm Robotics", "description": "RFID-based system for coordinating multiple robots.", "cost": 0 },
+  { "category": "RF & RFID", "title": "Automatic Whiteboard Eraser Robot", "description": "RFID-controlled robot to erase whiteboards automatically.", "cost": 0 },
+  { "category": "RF & RFID", "title": "Automatic BMI Calculator Using Load Cell & Height Sensing", "description": "RFID-based system to calculate BMI using sensors.", "cost": 0 },
+  { "category": "RF & RFID", "title": "RFID Mobile Charging System", "description": "RFID system to enable mobile charging at stations.", "cost": 0 },
+  { "category": "RF & RFID", "title": "RFID based voting system project", "description": "RFID-based secure voting system with Arduino.", "cost": 0 },
+  { "category": "RF & RFID", "title": "RF Controlled Robotic Vehicle", "description": "RF-controlled vehicle using Arduino for remote operation.", "cost": 0 },
+  { "category": "RF & RFID", "title": "Remote Controlled Automobile Using RF", "description": "RF-based system to control automobiles remotely.", "cost": 0 },
+  { "category": "RF & RFID", "title": "RF Controlled Spy Robot with Night Vision Camera", "description": "RF-controlled spy robot with night vision capabilities.", "cost": 0 },
+  { "category": "RF & RFID", "title": "Rf Controlled Spy Robot with Night Vision Camera Using PIC", "description": "PIC-based RF spy robot with night vision camera.", "cost": 0 },
+  { "category": "RF & RFID", "title": "Advanced Military Spying and Bomb Disposal Robot", "description": "RFID-based robot for spying and bomb disposal tasks.", "cost": 0 },
+  { "category": "RF & RFID", "title": "RF Controlled Wildlife Observation Robot", "description": "RF-controlled robot for observing wildlife remotely.", "cost": 0 },
+  { "category": "RF & RFID", "title": "Remote Controlled Robotic Arm Using RF", "description": "RF-based robotic arm for remote pick-and-place tasks.", "cost": 0 },
+  { "category": "RF & RFID", "title": "Paid Car Parking Project Based On RFID", "description": "RFID-based system for paid car parking management.", "cost": 0 },
+  { "category": "RF & RFID", "title": "RFID Based Passport", "description": "RFID-based passport verification system.", "cost": 0 },
+  { "category": "RF & RFID", "title": "RF Based Home Automation", "description": "RF-based home automation system using Arduino.", "cost": 0 },
+  { "category": "RF & RFID", "title": "Fire Fighter Robotic Vehicle with Night Vision Camera", "description": "RF-controlled firefighting robot with night vision.", "cost": 0 },
+  { "category": "RF & RFID", "title": "Motion Based Message Conveyer for Disabled People", "description": "RF-based message conveyor for disabled individuals.", "cost": 0 },
+  { "category": "RF & RFID", "title": "Security Access Control Using RFID", "description": "RFID-based security access control system.", "cost": 0 },
+  { "category": "RF & RFID", "title": "Attendance System Based On RFID", "description": "RFID-based attendance tracking system.", "cost": 0 },
+  { "category": "RF & RFID", "title": "RFID-Based Library Book Tracker", "description": "RFID system to track book borrowing and returns with LCD.", "cost": 0 },
+  { "category": "RF & RFID", "title": "RF Remote Appliance Controller", "description": "RF-based system using Arduino to control home appliances.", "cost": 0 },
+  { "category": "RF & RFID", "title": "RFID Smart Inventory System", "description": "RFID system to monitor inventory levels with web app.", "cost": 0 },
+  { "category": "RF & RFID", "title": "RF-Based Smart Gate Opener", "description": "RF system to open gates automatically using a remote.", "cost": 0 },
+  { "category": "RF & RFID", "title": "RFID Student ID Scanner", "description": "RFID-based system to scan student IDs and log attendance.", "cost": 0 },
+  { "category": "RF & RFID", "title": "RFID-Based Smart Shelf Monitor", "description": "RFID system to monitor shelf inventory in real-time.", "cost": 0 },
+  { "category": "RF & RFID", "title": "RF Remote Light Switch", "description": "RF-based light switch controller using Arduino.", "cost": 0 },
+  { "category": "RF & RFID", "title": "RFID-Based Secure Door Lock", "description": "RFID system for secure door access with Arduino.", "cost": 0 },
+  { "category": "RF & RFID", "title": "RF-Controlled Smart Fan", "description": "RF-based fan speed controller using Arduino.", "cost": 0 },
+  { "category": "RF & RFID", "title": "RFID-Based Asset Tracker", "description": "RFID system to track assets with real-time updates.", "cost": 0 },
+  { "category": "Bluetooth & Zigbee", "title": "Induction Motor Controller and Protection System", "description": "Bluetooth-based motor controller with protection features.", "cost": 0 },
+  { "category": "Bluetooth & Zigbee", "title": "DIY Bluetooth Gamepad for Android Gaming", "description": "Bluetooth-based gamepad using Arduino for Android games.", "cost": 0 },
+  { "category": "Bluetooth & Zigbee", "title": "Zigbee based Wireless Home Security System", "description": "Zigbee-based security system with wireless alerts.", "cost": 0 },
+  { "category": "Bluetooth & Zigbee", "title": "Portable Bluetooth Printer Project", "description": "Bluetooth-based portable printer using Arduino.", "cost": 0 },
+  { "category": "Bluetooth & Zigbee", "title": "Zigbee Based Gas Fire Detection System", "description": "Zigbee-based gas and fire detection with alerts.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "LED Flasher (Astable 555)", "description": "Basic circuit for LED flashing using 555 timer.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "One-Shot Timer (Monostable 555)", "description": "Basic circuit for one-shot timing using 555 timer.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Touch-Activated Timer (555)", "description": "Basic touch-activated timer circuit using 555 timer.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Adjustable Pulse Generator", "description": "Basic circuit for generating adjustable pulses.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Simple Audio Tone Generator (555)", "description": "Basic circuit for generating audio tones using 555 timer.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Multivibrator Circuits (Astable, Monostable, Bistable using BJTs/CMOS)", "description": "Basic multivibrator circuits using BJTs or CMOS.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Digital Clock using 555 and Counter ICs", "description": "Basic digital clock using 555 timer and counter ICs.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Metronome Circuit", "description": "Basic circuit for generating metronome pulses.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Traffic Light Controller (555 & Logic Gates)", "description": "Basic traffic light controller using 555 timer and logic gates.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "PWM Signal Generator (555)", "description": "Basic PWM signal generator using 555 timer.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Dark Sensor (LDR based)", "description": "Basic LDR-based dark sensor circuit.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Light Sensor (LDR based)", "description": "Basic LDR-based light sensor circuit.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Rain Alarm Circuit", "description": "Basic circuit for detecting rain with an alarm.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Water Level Indicator with LEDs", "description": "Basic water level indicator using LEDs.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Fire/Smoke Alarm (Thermistor/Photoresistor)", "description": "Basic fire/smoke alarm using thermistor or photoresistor.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Simple Temperature Controlled Fan", "description": "Basic temperature-controlled fan circuit.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Touch Sensor (Transistor based)", "description": "Basic transistor-based touch sensor circuit.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Infrared Obstacle Detector", "description": "Basic infrared-based obstacle detection circuit.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Door Open Alarm (Reed Switch)", "description": "Basic door open alarm using a reed switch.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Automatic Hand Dryer (IR sensor, basic relay)", "description": "Basic automatic hand dryer using IR sensor and relay.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Fixed Voltage DC Power Supply (LM78xx)", "description": "Basic fixed voltage DC power supply using LM78xx.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Adjustable DC Power Supply (LM317)", "description": "Basic adjustable DC power supply using LM317.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Dual Polarity Power Supply", "description": "Basic dual polarity power supply circuit.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Simple Battery Charger (e.g., for 9V/12V)", "description": "Basic battery charger circuit for 9V/12V batteries.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Voltage Doubler/Tripler Circuits", "description": "Basic voltage doubler or tripler circuit.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Over Voltage Protection Circuit", "description": "Basic over voltage protection circuit.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Low Voltage Cut-off for Battery", "description": "Basic low voltage cut-off circuit for batteries.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Simple DC-DC Buck Converter Model", "description": "Basic DC-DC buck converter circuit.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Basic Inverter (DC to AC, low power square wave)", "description": "Basic low-power DC to AC inverter with square wave output.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "AC to DC Converter with Filtering", "description": "Basic AC to DC converter with filtering.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Simple Audio Amplifier (LM386)", "description": "Basic audio amplifier using LM386.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Microphone Pre-Amplifier", "description": "Basic microphone pre-amplifier circuit.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Basic FM Transmitter (Low power)", "description": "Basic low-power FM transmitter circuit.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Basic AM/FM Receiver (Crystal Radio principles)", "description": "Basic AM/FM receiver based on crystal radio principles.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "VU Meter (Volume Unit Meter)", "description": "Basic volume unit meter for audio levels.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Simple Audio Mixer", "description": "Basic audio mixer circuit.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Electronic Siren Generator", "description": "Basic electronic siren generator circuit.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Noise Generator", "description": "Basic noise generator circuit.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Speaker Protector Circuit", "description": "Basic speaker protector circuit.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Tone Control Circuit (Bass/Treble)", "description": "Basic tone control circuit for bass and treble.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Logic Gate Demonstrator (AND, OR, NOT, XOR)", "description": "Basic logic gate demonstrator for AND, OR, NOT, XOR gates.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Half Adder / Full Adder", "description": "Basic half adder and full adder circuits.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Multiplexer / Demultiplexer Demonstrator", "description": "Basic multiplexer and demultiplexer demonstrator circuit.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Encoder / Decoder Circuit", "description": "Basic encoder and decoder circuit.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Flip-Flop Demonstrator (SR, JK, D, T)", "description": "Basic flip-flop demonstrator for SR, JK, D, T types.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Asynchronous Counter (Ripple Counter)", "description": "Basic asynchronous ripple counter circuit.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Synchronous Counter", "description": "Basic synchronous counter circuit.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Digital Dice (using counter and 7-segment display)", "description": "Basic digital dice using counter and 7-segment display.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "LED Chaser/Knight Rider Effect", "description": "Basic LED chaser circuit for Knight Rider effect.", "cost": 0 },
+  { "category": "Basic Electronics & Analog Circuits", "title": "Digital Code Lock (Basic using logic gates)", "description": "Basic digital code lock using logic gates.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Temperature & Humidity Monitor (DHT11/22, LCD)", "description": "Microcontroller-based temperature and humidity monitor with LCD display.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Ultrasonic Distance Meter with Display", "description": "Microcontroller-based ultrasonic distance meter with display.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Gas Leakage Detector with Alarm", "description": "Microcontroller-based gas leakage detector with alarm.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "PIR Motion Detector with Alert", "description": "Microcontroller-based PIR motion detector with alert system.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "LDR based Smart Light Control", "description": "Microcontroller-based smart light control using LDR.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Soil Moisture Sensor for Smart Irrigation", "description": "Microcontroller-based soil moisture sensor for smart irrigation.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Barometric Pressure & Altitude Sensor", "description": "Microcontroller-based barometric pressure and altitude sensor.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Heart Rate Monitor (Pulse Sensor)", "description": "Microcontroller-based heart rate monitor using pulse sensor.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Sound Level Meter", "description": "Microcontroller-based sound level meter.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Accelerometer based Tilt Sensor", "description": "Microcontroller-based tilt sensor using accelerometer.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "DC Motor Speed Control (PWM)", "description": "Microcontroller-based DC motor speed control using PWM.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Servo Motor Position Control", "description": "Microcontroller-based servo motor position control.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Stepper Motor Control", "description": "Microcontroller-based stepper motor control.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Relay Control for Home Appliances", "description": "Microcontroller-based relay control for home appliances.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Line Follower Robot", "description": "Microcontroller-based line follower robot.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Obstacle Avoiding Robot", "description": "Microcontroller-based obstacle avoiding robot.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Bluetooth/IR Controlled Robot Car", "description": "Microcontroller-based robot car controlled via Bluetooth or IR.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Robotic Arm Control (2-DOF/3-DOF)", "description": "Microcontroller-based robotic arm control with 2 or 3 degrees of freedom.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "LED Matrix Display Scrolling Text", "description": "Microcontroller-based LED matrix display for scrolling text.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "7-Segment Display Counter/Clock", "description": "Microcontroller-based 7-segment display counter or clock.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Home Automation via Bluetooth App", "description": "Microcontroller-based home automation via Bluetooth app.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Automated Plant Watering System", "description": "Microcontroller-based automated plant watering system.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Smart Garden Lighting System", "description": "Microcontroller-based smart garden lighting system.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Weather Station with Display", "description": "Microcontroller-based weather station with display.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Automated Pet Feeder", "description": "Microcontroller-based automated pet feeder.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Smart Dustbin (Ultrasonic sensor)", "description": "Microcontroller-based smart dustbin using ultrasonic sensor.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Automated Door/Gate Opener", "description": "Microcontroller-based automated door or gate opener.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Visitor Counter with Display", "description": "Microcontroller-based visitor counter with display.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Water Level Controller with Automatic Pump Control", "description": "Microcontroller-based water level controller with automatic pump control.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Automatic Hand Sanitizer Dispenser", "description": "Microcontroller-based automatic hand sanitizer dispenser.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "RFID Based Access Control System", "description": "Microcontroller-based RFID access control system.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Fingerprint Based Door Lock", "description": "Microcontroller-based fingerprint door lock.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Password Protected Door Lock (Keypad)", "description": "Microcontroller-based password-protected door lock using keypad.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Burglar Alarm System (PIR/IR)", "description": "Microcontroller-based burglar alarm using PIR or IR sensors.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Fire Detection and Alarm System", "description": "Microcontroller-based fire detection and alarm system.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Smart Locker with OTP (via GSM/Bluetooth)", "description": "Microcontroller-based smart locker with OTP via GSM or Bluetooth.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Vehicle Anti-Theft System", "description": "Microcontroller-based vehicle anti-theft system.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Metal Detector (Basic)", "description": "Microcontroller-based basic metal detector.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "CCTV Camera Motion Detection (ESP32-CAM)", "description": "Microcontroller-based CCTV camera motion detection using ESP32-CAM.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Smart Doorbells with Notifications", "description": "Microcontroller-based smart doorbell with notifications.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Digital Voltmeter/Ammeter (High Accuracy)", "description": "Microcontroller-based high-accuracy digital voltmeter/ammeter.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Frequency Counter", "description": "Microcontroller-based frequency counter.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "RPM Meter (Tachometer)", "description": "Microcontroller-based RPM meter or tachometer.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Digital Thermometer", "description": "Microcontroller-based digital thermometer.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Capacitance Meter", "description": "Microcontroller-based capacitance meter.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Inductance Meter", "description": "Microcontroller-based inductance meter.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Component Tester (Resistor, Capacitor, Diode)", "description": "Microcontroller-based component tester for resistors, capacitors, and diodes.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Battery Capacity Tester", "description": "Microcontroller-based battery capacity tester.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Power Consumption Monitor", "description": "Microcontroller-based power consumption monitor.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Programmable Timer Switch", "description": "Microcontroller-based programmable timer switch.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Scrolling Text on LCD", "description": "Microcontroller-based scrolling text display on LCD.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Digital Clock with RTC Module (LCD/OLED)", "description": "Microcontroller-based digital clock with RTC module and LCD/OLED display.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Stopwatch/Countdown Timer", "description": "Microcontroller-based stopwatch or countdown timer.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Graphical Display on OLED (e.g., Sensor Data Plot)", "description": "Microcontroller-based graphical display on OLED for sensor data.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Simple Game (e.g., Snake, Tetris on OLED/LCD)", "description": "Microcontroller-based simple game like Snake or Tetris on OLED/LCD.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Custom Character Display on LCD", "description": "Microcontroller-based custom character display on LCD.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Touchscreen Interface for Control", "description": "Microcontroller-based touchscreen interface for control.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Virtual Instrumentation (Data to PC via Serial)", "description": "Microcontroller-based virtual instrumentation with data to PC via serial.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Analog Clock with Servo Motors", "description": "Microcontroller-based analog clock using servo motors.", "cost": 0 },
+  { "category": "Microcontroller-Based Projects", "title": "Multi-Sensor Data Display on a Single Screen", "description": "Microcontroller-based multi-sensor data display on a single screen.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "IoT-based Smart Light Control (Web server, Blynk, MQTT)", "description": "ESP32/ESP8266-based smart light control with web server, Blynk, or MQTT.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "IoT-based Temperature & Humidity Monitoring (Cloud logging)", "description": "ESP32/ESP8266-based temperature and humidity monitoring with cloud logging.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "Remote Controlled Smart Plug", "description": "ESP32/ESP8266-based remote-controlled smart plug.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "IoT-based Automated Blinds/Curtains", "description": "ESP32/ESP8266-based automated blinds or curtains.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "Smart Irrigation System (Cloud controlled)", "description": "ESP32/ESP8266-based smart irrigation system with cloud control.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "IoT-based Garage Door Opener", "description": "ESP32/ESP8266-based IoT garage door opener.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "Voice Controlled Home Automation (Google Assistant/Alexa integration)", "description": "ESP32/ESP8266-based voice-controlled home automation with Google Assistant or Alexa.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "Smart Energy Meter with Cloud Logging", "description": "ESP32/ESP8266-based smart energy meter with cloud logging.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "IoT Door Lock with Remote Access", "description": "ESP32/ESP8266-based IoT door lock with remote access.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "IoT-based Security Camera (ESP32-CAM)", "description": "ESP32-CAM-based IoT security camera.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "IoT Weather Station (Temperature, Humidity, Pressure, Rain)", "description": "ESP32/ESP8266-based IoT weather station monitoring temperature, humidity, pressure, and rain.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "Air Quality Monitoring (CO2, PM2.5 sensors, Cloud)", "description": "ESP32/ESP8266-based air quality monitoring with CO2 and PM2.5 sensors and cloud logging.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "Smart Farm Monitoring (Soil parameters, water, weather to cloud)", "description": "ESP32/ESP8266-based smart farm monitoring with soil, water, and weather data to cloud.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "Water Quality Monitoring (pH, Turbidity, Conductivity)", "description": "ESP32/ESP8266-based water quality monitoring with pH, turbidity, and conductivity sensors.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "Noise Pollution Monitoring", "description": "ESP32/ESP8266-based noise pollution monitoring system.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "Remote Water Level Monitoring", "description": "ESP32/ESP8266-based remote water level monitoring system.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "Smart Greenhouse Monitoring & Control", "description": "ESP32/ESP8266-based smart greenhouse monitoring and control system.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "Crop Health Monitoring (Basic image analysis on ESP32-CAM)", "description": "ESP32-CAM-based crop health monitoring with basic image analysis.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "IoT-based Pest Repellent System", "description": "ESP32/ESP8266-based IoT pest repellent system.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "Smart Waste Management (Bin fill level detection)", "description": "ESP32/ESP8266-based smart waste management with bin fill level detection.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "IoT-based Machine Health Monitoring (Vibration/Temp)", "description": "ESP32/ESP8266-based machine health monitoring with vibration and temperature sensors.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "Smart Parking System (Occupancy detection to cloud)", "description": "ESP32/ESP8266-based smart parking system with occupancy detection and cloud logging.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "IoT-based Street Light Monitoring & Control", "description": "ESP32/ESP8266-based IoT street light monitoring and control system.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "Asset Tracking System (LoRa/GPS)", "description": "ESP32/ESP8266-based asset tracking system using LoRa or GPS.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "Predictive Maintenance for Industrial Equipment (Basic sensor data)", "description": "ESP32/ESP8266-based predictive maintenance for industrial equipment using sensor data.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "Smart Public Transport Tracking System", "description": "ESP32/ESP8266-based smart public transport tracking system.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "IoT-based Smart Metering (Water/Gas)", "description": "ESP32/ESP8266-based smart metering for water or gas.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "Supply Chain Monitoring (Temperature/Humidity logging)", "description": "ESP32/ESP8266-based supply chain monitoring with temperature and humidity logging.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "Smart Building Occupancy Monitoring", "description": "ESP32/ESP8266-based smart building occupancy monitoring system.", "cost": 0 },
+  { "category": "IoT (Internet of Things) Projects", "title": "IoT-based Smart Grid Node (Simulated)", "description": "ESP32/ESP8266-based simulated smart grid node.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Solar-powered mobile charger", "description": "Solar-powered mobile charger system.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Automatic solar street light with intensity control", "description": "Solar-powered street light with automatic intensity control.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Solar energy harvesting for rural electrification", "description": "Solar energy harvesting system for rural electrification.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Solar-powered smart irrigation system", "description": "Solar-powered smart irrigation system with automation.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "MPPT (Maximum Power Point Tracking) based solar charge controller", "description": "Solar charge controller with MPPT for efficient energy harvesting.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Hybrid solar-wind power generation system", "description": "Hybrid system combining solar and wind power generation.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Solar-powered water pumping system", "description": "Solar-powered system for water pumping.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Grid-tied solar inverter design", "description": "Design of a grid-tied solar inverter.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Solar panel cleaning robot", "description": "Robot for automated cleaning of solar panels.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Solar-powered electric fence for agriculture", "description": "Solar-powered electric fence for agricultural use.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Dual Axis Solar Tracker (Small Scale)", "description": "Small-scale dual-axis solar tracker for enhanced efficiency.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Solar Panel Monitoring System", "description": "System to monitor solar panel performance.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Solar Inverter (Low Power Pure Sine Wave)", "description": "Low-power pure sine wave solar inverter.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Solar Power Management for Off-Grid Cabin (Model)", "description": "Solar power management system for off-grid cabin.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Solar Energy Harvesting for Wireless Sensors", "description": "Solar energy harvesting for powering wireless sensors.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Small-scale wind turbine for home use", "description": "Small-scale wind turbine designed for home use.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Wind energy monitoring system", "description": "System to monitor wind energy generation.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Vertical axis wind turbine (VAWT) design", "description": "Design of a vertical axis wind turbine.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Off-grid wind power system", "description": "Off-grid wind power generation system.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Wind turbine blade design and efficiency analysis", "description": "Design and efficiency analysis of wind turbine blades.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Peltier cooler/heater using thermoelectric effect", "description": "Peltier-based cooler/heater using thermoelectric effect.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Piezoelectric energy harvesting from footsteps", "description": "Piezoelectric system for energy harvesting from footsteps.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Tidal energy generation model", "description": "Model for tidal energy generation.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Biomass energy conversion system", "description": "System for biomass energy conversion.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Buck converter design and simulation", "description": "Design and simulation of a buck converter.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Boost converter for voltage regulation", "description": "Boost converter for voltage regulation.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Buck-boost converter for variable output", "description": "Buck-boost converter for variable voltage output.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "SEPIC converter for non-inverted output", "description": "SEPIC converter for non-inverted voltage output.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Isolated DC-DC converter for battery charging", "description": "Isolated DC-DC converter for battery charging.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Pure sine wave inverter for home appliances", "description": "Pure sine wave inverter for home appliances.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Modified sine wave inverter", "description": "Modified sine wave inverter design.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Single-phase PWM inverter", "description": "Single-phase PWM inverter for power conversion.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Three-phase inverter for motor control", "description": "Three-phase inverter for motor control.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Solar inverter with grid synchronization", "description": "Solar inverter with grid synchronization capabilities.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Flyback Converter (Basic)", "description": "Basic flyback converter design.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Push-Pull Converter (Basic)", "description": "Basic push-pull converter design.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "High-Frequency Transformer Design (Basic)", "description": "Basic high-frequency transformer design.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "DC Motor Drive with Regenerative Braking (Model)", "description": "DC motor drive with regenerative braking model.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "SMPS (Switched-Mode Power Supply) Design (Basic)", "description": "Basic switched-mode power supply design.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Automatic power factor correction (APFC) unit", "description": "Automatic power factor correction unit.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Automatic changeover switch for generators", "description": "Automatic changeover switch for generator power.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Load shedding and management system", "description": "Load shedding and management system for power distribution.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Energy meter with over-current protection", "description": "Energy meter with over-current protection.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Smart grid monitoring system", "description": "Smart grid monitoring system for power management.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Capacitor bank for reactive power compensation", "description": "Capacitor bank for reactive power compensation.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Automatic Voltage Regulator (AVR)", "description": "Automatic voltage regulator for stable power output.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Prepaid Energy Meter", "description": "Prepaid energy meter for controlled power usage.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Smart Energy Meter with IoT Features", "description": "Smart energy meter with IoT features for remote monitoring.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Overcurrent/Overvoltage Protection for Appliances", "description": "Overcurrent and overvoltage protection system for appliances.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Uninterruptible Power Supply (UPS) Model", "description": "Model of an uninterruptible power supply system.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Grid Synchronization System (Basic Simulation/Hardware)", "description": "Basic grid synchronization system for power integration.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Harmonic Filter Design (Basic)", "description": "Basic harmonic filter design for power quality.", "cost": 0 },
+  { "category": "Power Electronics & Renewable Energy Systems", "title": "Power Quality Analyzer (Basic)", "description": "Basic power quality analyzer for monitoring electrical parameters.", "cost": 0 },
+  { "category": "Control Systems & Automation", "title": "Conveyor belt control system", "description": "Automated conveyor belt control system.", "cost": 0 },
+  { "category": "Control Systems & Automation", "title": "Automated sorting machine", "description": "Automated machine for sorting objects.", "cost": 0 },
+  { "category": "Control Systems & Automation", "title": "PLC-based industrial control system (simulation or hardware)", "description": "PLC-based industrial control system for automation.", "cost": 0 },
+  { "category": "Control Systems & Automation", "title": "SCADA system for industrial process monitoring", "description": "SCADA system for monitoring industrial processes.", "cost": 0 },
+  { "category": "Control Systems & Automation", "title": "PID Controller for Temperature/Motor Speed", "description": "PID controller for temperature or motor speed regulation.", "cost": 0 },
+  { "category": "Control Systems & Automation", "title": "Automated Bottle Filling Plant Model", "description": "Model of an automated bottle filling plant.", "cost": 0 },
+  { "category": "Control Systems & Automation", "title": "Water Treatment Plant Automation Model", "description": "Model of an automated water treatment plant.", "cost": 0 },
+  { "category": "Control Systems & Automation", "title": "Elevator Control System (Model)", "description": "Model of an elevator control system.", "cost": 0 },
+  { "category": "Control Systems & Automation", "title": "Traffic Density Control System", "description": "System for controlling traffic based on density.", "cost": 0 },
+  { "category": "Control Systems & Automation", "title": "Automated Packaging Machine Model", "description": "Model of an automated packaging machine.", "cost": 0 },
+  { "category": "Control Systems & Automation", "title": "Robotic Arm for Pick and Place", "description": "Robotic arm for automated pick-and-place tasks.", "cost": 0 },
+  { "category": "Control Systems & Automation", "title": "Temperature control system using PID", "description": "PID-based temperature control system.", "cost": 0 },
+  { "category": "Control Systems & Automation", "title": "Light intensity control using LDR", "description": "Light intensity control system using LDR.", "cost": 0 },
+  { "category": "Control Systems & Automation", "title": "Automatic water level controller", "description": "Automatic water level controller system.", "cost": 0 },
+  { "category": "Control Systems & Automation", "title": "Speed control of a fan based on room temperature", "description": "Fan speed control system based on room temperature.", "cost": 0 },
+  { "category": "Control Systems & Automation", "title": "Traffic light control system", "description": "Automated traffic light control system.", "cost": 0 },
+  { "category": "Control Systems & Automation", "title": "Digital voltmeter/ammeter", "description": "Digital voltmeter and ammeter for electrical measurements.", "cost": 0 }
+        ]; 
+
+        // --- Utility Functions ---
+
+        /**
+         * Displays a custom message box instead of alert().
+         * @param {string} message - The message to display.
+         */
+        function showMessageBox(message) {
+            messageBoxContent.textContent = message;
+            messageBox.classList.remove('hidden');
+        }
+
+        // Event listener for message box close button
+        messageBoxClose.addEventListener('click', () => {
+            messageBox.classList.add('hidden');
+        });
+
+        /**
+         * Hides all view sections.
+         */
+        function hideAllSections() {
+            document.querySelectorAll('.view-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+        }
+
+        /**
+         * Hides all admin sub-sections.
+         */
+        function hideAdminSubSections() {
+            document.querySelectorAll('.admin-sub-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+        }
+
+        /**
+         * Saves data to LocalStorage.
+         * @param {string} key - The key for LocalStorage.
+         * @param {any} data - The data to save.
+         */
+        function saveData(key, data) {
+            try {
+                localStorage.setItem(key, JSON.stringify(data));
+            } catch (e) {
+                console.error(`Error saving to LocalStorage (${key}):`, e);
+                showMessageBox("Error saving data. LocalStorage might be full or unavailable.");
+            }
+        }
+
+        /**
+         * Loads data from LocalStorage.
+         * @param {string} key - The key for LocalStorage.
+         * @param {any} defaultValue - The default value if data is not found or corrupted.
+         * @returns {any} The loaded data or default value.
+         */
+        function loadData(key, defaultValue) {
+            try {
+                const storedData = localStorage.getItem(key);
+                return storedData ? JSON.parse(storedData) : defaultValue;
+            } catch (e) {
+                console.error(`Error loading from LocalStorage (${key}):`, e);
+                showMessageBox("Error loading data. Data might be corrupted or LocalStorage unavailable. Resetting data.");
+                return defaultValue; // Return default if loading fails
+            }
+        }
+
+        // --- Authentication Logic ---
+
+        /**
+         * Checks admin authentication status and displays the appropriate view.
+         */
+        function checkAuth() {
+            // Always show student dashboard first
+            showStudentDashboard();
+            // The admin login button is now always visible in the corner
+        }
+
+        /**
+         * Handles admin login form submission.
+         * @param {Event} event - The form submission event.
+         */
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                saveData(LOCAL_STORAGE_KEY_ADMIN_AUTH, true);
+                showAdminDashboard();
+                showMessageBox("Admin login successful!");
+            } else {
+                showMessageBox("Invalid username or password.");
+            }
+        }
+
+        /**
+         * Handles admin logout.
+         */
+        function handleAdminLogout() {
+            saveData(LOCAL_STORAGE_KEY_ADMIN_AUTH, false);
+            showLoginSection(); // Or showStudentDashboard() if you want to go back to student view
+            showMessageBox("Logged out successfully.");
+        }
+
+        // --- View Switching Functions ---
+
+        /**
+         * Shows the login section and hides others.
+         */
+        function showLoginSection() {
+            hideAllSections();
+            loginSection.classList.remove('hidden');
+        }
+
+        /**
+         * Shows the admin dashboard and hides others.
+         */
+        function showAdminDashboard() {
+            hideAllSections();
+            adminDashboard.classList.remove('hidden');
+            showAdminProjectsManagementSection(); // Default to projects management
+            updateNewInquiriesBadge(); // Update badge on showing dashboard
+        }
+
+        /**
+         * Shows the student dashboard and hides others.
+         */
+        function showStudentDashboard() {
+            hideAllSections();
+            studentDashboard.classList.remove('hidden');
+            renderStudentProjects(); // Re-render student cards on showing dashboard
+            updateCategoryFilter(); // Update categories for filter
+            projectSearch.value = ''; // Clear search on view change
+            categoryFilter.value = ''; // Clear filter on view change
+        }
+
+        /**
+         * Shows the admin projects management sub-section.
+         */
+        function showAdminProjectsManagementSection() {
+            hideAdminSubSections();
+            adminProjectsManagement.classList.remove('hidden');
+            renderAdminProjects();
+            showAdminProjectsBtn.classList.add('bg-blue-600');
+            showAdminProjectsBtn.classList.remove('bg-blue-500');
+            showAdminInquiriesBtn.classList.remove('bg-purple-600');
+            showAdminInquiriesBtn.classList.add('bg-purple-500');
+            resetProjectForm(); // Reset form when switching to projects management
+        }
+
+        /**
+         * Shows the admin inquiries view sub-section.
+         */
+        function showAdminInquiriesViewSection() {
+            hideAdminSubSections();
+            adminInquiriesView.classList.remove('hidden');
+            renderAdminInquiries();
+            showAdminInquiriesBtn.classList.add('bg-purple-600');
+            showAdminInquiriesBtn.classList.remove('bg-purple-500');
+            showAdminProjectsBtn.classList.remove('bg-blue-600');
+            showAdminProjectsBtn.classList.add('bg-blue-500');
+        }
+
+        // --- Admin Panel Logic ---
+
+        /**
+         * Renders projects in the admin table.
+         */
+        function renderAdminProjects() {
+            adminProjectTableBody.innerHTML = '';
+            if (projects.length === 0) {
+                noAdminProjectsMessage.classList.remove('hidden');
+            } else {
+                noAdminProjectsMessage.classList.add('hidden');
+                projects.forEach((project, index) => {
+                    const row = adminProjectTableBody.insertRow();
+                    row.classList.add('hover:bg-gray-50');
+
+                    row.insertCell().textContent = project.category;
+                    row.insertCell().textContent = project.title;
+                    row.insertCell().textContent = `₹${project.cost.toLocaleString('en-IN')}`; // Format cost for India
+
+                    const actionCell = row.insertCell();
+                    actionCell.classList.add('no-print', 'space-x-2', 'flex', 'flex-col', 'sm:flex-row', 'sm:space-x-2', 'space-y-1', 'sm:space-y-0');
+                    
+                    const editButton = document.createElement('button');
+                    editButton.innerHTML = '<i class="fas fa-edit"></i> Edit';
+                    editButton.classList.add(
+                        'px-3', 'py-1', 'bg-yellow-500', 'text-white', 'rounded-md', 'hover:bg-yellow-600',
+                        'focus:outline-none', 'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-yellow-500',
+                        'transition', 'ease-in-out', 'duration-150', 'text-xs', 'flex', 'items-center', 'space-x-1'
+                    );
+                    editButton.dataset.index = index;
+                    editButton.addEventListener('click', handleEditProject);
+                    actionCell.appendChild(editButton);
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i> Delete';
+                    deleteButton.classList.add(
+                        'px-3', 'py-1', 'bg-red-500', 'text-white', 'rounded-md', 'hover:bg-red-600',
+                        'focus:outline-none', 'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-red-500',
+                        'transition', 'ease-in-out', 'duration-150', 'text-xs', 'flex', 'items-center', 'space-x-1'
+                    );
+                    deleteButton.dataset.index = index;
+                    deleteButton.addEventListener('click', handleDeleteProject);
+                    actionCell.appendChild(deleteButton);
+                });
+            }
+        }
+
+        /**
+         * Resets the project form to "Add New Project" mode.
+         */
+        function resetProjectForm() {
+            adminProjectForm.reset();
+            adminProjectId.value = ''; // Clear hidden ID
+            adminProjectFormTitle.textContent = 'Add New Project';
+            submitProjectBtn.textContent = 'Add Project';
+            cancelEditProjectBtn.classList.add('hidden');
+            editingProjectIndex = -1;
+        }
+
+        /**
+         * Handles editing a project from the admin table.
+         * @param {Event} event - The click event.
+         */
+        function handleEditProject(event) {
+            editingProjectIndex = parseInt(event.currentTarget.dataset.index);
+            const projectToEdit = projects[editingProjectIndex];
+
+            adminProjectId.value = projectToEdit.id; // Store project ID
+            adminProjectCategory.value = projectToEdit.category;
+            adminProjectTitle.value = projectToEdit.title;
+            adminProjectDescription.value = projectToEdit.description || ''; // Populate description
+            adminProjectCost.value = projectToEdit.cost;
+
+            adminProjectFormTitle.textContent = 'Edit Project';
+            submitProjectBtn.textContent = 'Update Project';
+            cancelEditProjectBtn.classList.remove('hidden');
+        }
+
+        /**
+         * Handles adding or updating a project from the admin form.
+         * @param {Event} event - The form submission event.
+         */
+        function handleSubmitProjectForm(event) {
+            event.preventDefault();
+            const id = adminProjectId.value;
+            const category = adminProjectCategory.value.trim();
+            const title = adminProjectTitle.value.trim();
+            const description = adminProjectDescription.value.trim(); // Get description
+            const cost = parseInt(adminProjectCost.value);
+
+            if (!category || !title || isNaN(cost) || cost < 0) {
+                showMessageBox("Please fill in all project fields correctly.");
+                return;
+            }
+
+            if (editingProjectIndex !== -1 && projects[editingProjectIndex].id === id) {
+                // Update existing project
+                projects[editingProjectIndex] = { id, category, title, description, cost };
+                showMessageBox("Project updated successfully!");
+            } else {
+                // Add new project
+                const newProject = { id: `proj-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`, category, title, description, cost };
+                projects.push(newProject);
+                showMessageBox("Project added successfully!");
+            }
+            
+            saveData(LOCAL_STORAGE_KEY_PROJECTS, projects);
+            renderAdminProjects();
+            resetProjectForm(); // Reset form after add/update
+            updateCategoryFilter(); // Update categories after changes
+            renderStudentProjects(); // Re-render student view to reflect changes
+        }
+
+        /**
+         * Handles deleting a project from the admin table.
+         * @param {Event} event - The click event.
+         */
+        function handleDeleteProject(event) {
+            const indexToDelete = parseInt(event.currentTarget.dataset.index);
+            if (!isNaN(indexToDelete) && indexToDelete >= 0 && indexToDelete < projects.length) {
+                if (confirm(`Are you sure you want to delete project: "${projects[indexToDelete].title}"? This action cannot be undone.`)) {
+                    projects.splice(indexToDelete, 1);
+                    saveData(LOCAL_STORAGE_KEY_PROJECTS, projects);
+                    renderAdminProjects();
+                    showMessageBox("Project deleted successfully!");
+                    updateCategoryFilter(); // Update categories after deleting a project
+                    renderStudentProjects(); // Re-render student view to reflect changes
+                }
+            }
+        }
+        
+        /**
+         * Renders inquiries in the admin inquiries table.
+         */
+        function renderAdminInquiries() {
+            adminInquiriesTableBody.innerHTML = '';
+            if (inquiries.length === 0) {
+                noInquiriesMessage.classList.remove('hidden');
+            } else {
+                noInquiriesMessage.classList.add('hidden');
+                inquiries.forEach((inquiry, index) => {
+                    const row = adminInquiriesTableBody.insertRow();
+                    row.classList.add('hover:bg-gray-50');
+                    // Highlight new inquiries
+                    if (inquiry.status === 'new') {
+                        row.classList.add('bg-yellow-50');
+                    }
+
+                    row.insertCell().textContent = inquiry.id.substring(0, 8); // Display short ID
+                    row.insertCell().textContent = inquiry.studentDetails.name;
+
+                    const contactCell = row.insertCell();
+                    contactCell.classList.add('text-sm', 'text-gray-700');
+                    contactCell.innerHTML = `
+                        <p>${inquiry.studentDetails.mobile}</p>
+                        <p>${inquiry.studentDetails.email || ''}</p>
+                        <p>${inquiry.studentDetails.college || ''}</p>
+                        <p>${inquiry.studentDetails.city || '', inquiry.studentDetails.state || ''}</p>
+                    `;
+
+                    const projectsCell = row.insertCell();
+                    projectsCell.classList.add('text-sm', 'text-gray-700');
+                    inquiry.inquiredItems.forEach(item => {
+                        const projectLine = document.createElement('p');
+                        projectLine.textContent = `${item.title} (x${item.quantity})`;
+                        projectsCell.appendChild(projectLine);
+                    });
+
+                    row.insertCell().textContent = `₹${inquiry.totalCost.toLocaleString('en-IN')}`;
+                    
+                    const referralCodeCell = row.insertCell();
+                    referralCodeCell.classList.add('text-sm', 'text-gray-700');
+                    referralCodeCell.textContent = inquiry.referralCodeUsed || 'N/A';
+
+                    const statusCell = row.insertCell();
+                    let statusColorClass = '';
+                    let statusText = '';
+                    switch (inquiry.status) {
+                        case 'new':
+                            statusColorClass = 'bg-red-100 text-red-800';
+                            statusText = 'New';
+                            break;
+                        case 'viewed':
+                            statusColorClass = 'bg-blue-100 text-blue-800';
+                            statusText = 'Viewed';
+                            break;
+                        case 'contacted':
+                            statusColorClass = 'bg-green-100 text-green-800';
+                            statusText = 'Contacted';
+                            break;
+                        case 'resolved':
+                            statusColorClass = 'bg-purple-100 text-purple-800';
+                            statusText = 'Resolved';
+                            break;
+                        case 'archived':
+                            statusColorClass = 'bg-gray-100 text-gray-800';
+                            statusText = 'Archived';
+                            break;
+                    }
+                    statusCell.innerHTML = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColorClass}">${statusText}</span>`;
+                    statusCell.classList.add('whitespace-nowrap');
+
+
+                    const actionCell = row.insertCell();
+                    actionCell.classList.add('no-print', 'space-x-2', 'flex', 'flex-col', 'sm:flex-row', 'sm:space-x-2', 'space-y-1', 'sm:space-y-0');
+                    
+                    // Only show status change buttons if not already resolved/archived
+                    if (inquiry.status !== 'resolved' && inquiry.status !== 'archived') {
+                        const markViewedButton = document.createElement('button');
+                        markViewedButton.innerHTML = '<i class="fas fa-eye"></i> Viewed';
+                        markViewedButton.classList.add(
+                            'px-3', 'py-1', 'bg-blue-500', 'text-white', 'rounded-md', 'hover:bg-blue-600',
+                            'focus:outline-none', 'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-blue-500',
+                            'transition', 'ease-in-out', 'duration-150', 'text-xs', 'flex', 'items-center', 'justify-center', 'space-x-1'
+                        );
+                        markViewedButton.dataset.index = index;
+                        markViewedButton.addEventListener('click', () => handleMarkInquiryStatus(index, 'viewed'));
+                        actionCell.appendChild(markViewedButton);
+
+                        const markContactedButton = document.createElement('button');
+                        markContactedButton.innerHTML = '<i class="fas fa-phone"></i> Contacted';
+                        markContactedButton.classList.add(
+                            'px-3', 'py-1', 'bg-green-500', 'text-white', 'rounded-md', 'hover:bg-green-600',
+                            'focus:outline-none', 'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-green-500',
+                            'transition', 'ease-in-out', 'duration-150', 'text-xs', 'flex', 'items-center', 'justify-center', 'space-x-1'
+                        );
+                        markContactedButton.dataset.index = index;
+                        markContactedButton.addEventListener('click', () => handleMarkInquiryStatus(index, 'contacted'));
+                        actionCell.appendChild(markContactedButton);
+
+                        const markResolvedButton = document.createElement('button');
+                        markResolvedButton.innerHTML = '<i class="fas fa-check-circle"></i> Resolved';
+                        markResolvedButton.classList.add(
+                            'px-3', 'py-1', 'bg-purple-500', 'text-white', 'rounded-md', 'hover:bg-purple-600',
+                            'focus:outline-none', 'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-purple-500',
+                            'transition', 'ease-in-out', 'duration-150', 'text-xs', 'flex', 'items-center', 'justify-center', 'space-x-1'
+                        );
+                        markResolvedButton.dataset.index = index;
+                        markResolvedButton.addEventListener('click', () => handleMarkInquiryStatus(index, 'resolved'));
+                        actionCell.appendChild(markResolvedButton);
+                    }
+                    
+                    const deleteButton = document.createElement('button');
+                    deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i> Delete';
+                    deleteButton.classList.add(
+                        'px-3', 'py-1', 'bg-red-500', 'text-white', 'rounded-md', 'hover:bg-red-600',
+                        'focus:outline-none', 'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-red-500',
+                        'transition', 'ease-in-out', 'duration-150', 'text-xs', 'flex', 'items-center', 'justify-center', 'space-x-1'
+                    );
+                    deleteButton.dataset.index = index;
+                    deleteButton.addEventListener('click', handleDeleteInquiry);
+                    actionCell.appendChild(deleteButton);
+                });
+            }
+            updateNewInquiriesBadge(); // Update badge after rendering inquiries
+        }
+
+        /**
+         * Handles marking an inquiry with a specific status.
+         * @param {number} index - The index of the inquiry to update.
+         * @param {string} status - The new status ('viewed', 'contacted', 'resolved', 'archived').
+         */
+        function handleMarkInquiryStatus(index, status) {
+            if (!isNaN(index) && index >= 0 && index < inquiries.length) {
+                inquiries[index].status = status;
+                saveData(LOCAL_STORAGE_KEY_INQUIRIES, inquiries);
+                renderAdminInquiries();
+                showMessageBox(`Inquiry marked as '${status}'.`);
+            }
+        }
+
+        /**
+         * Handles deleting an inquiry from the admin table.
+         * @param {Event} event - The click event.
+         */
+        function handleDeleteInquiry(event) {
+            const indexToDelete = parseInt(event.currentTarget.dataset.index);
+            if (!isNaN(indexToDelete) && indexToDelete >= 0 && indexToDelete < inquiries.length) {
+                if (confirm(`Are you sure you want to delete inquiry from "${inquiries[indexToDelete].studentDetails.name}"? This action cannot be undone.`)) {
+                    inquiries.splice(indexToDelete, 1);
+                    saveData(LOCAL_STORAGE_KEY_INQUIRIES, inquiries);
+                    renderAdminInquiries();
+                    showMessageBox("Inquiry successfully deleted!");
+                }
+            }
+        }
+
+        /**
+         * Clears all inquiries from the admin panel.
+         */
+        function handleClearAllInquiries() {
+            if (inquiries.length === 0) {
+                showMessageBox("No inquiries to clear.");
+                return;
+            }
+            // Using confirm for critical action
+            if (confirm("Are you sure you want to clear all inquiries? This action cannot be undone.")) {
+                inquiries = [];
+                saveData(LOCAL_STORAGE_KEY_INQUIRIES, inquiries);
+                renderAdminInquiries();
+                showMessageBox("All inquiries cleared.");
+            }
+        }
+
+        /**
+         * Updates the new inquiries badge count.
+         */
+        function updateNewInquiriesBadge() {
+            const newInquiriesCount = inquiries.filter(inquiry => inquiry.status === 'new').length;
+            if (newInquiriesCount > 0) {
+                newInquiriesBadge.textContent = newInquiriesCount;
+                newInquiriesBadge.classList.remove('hidden');
+            } else {
+                newInquiriesBadge.classList.add('hidden');
+            }
+        }
+
+        // --- Student Panel Logic ---
+
+        /**
+         * Populates the category filter dropdown.
+         */
+        function updateCategoryFilter() {
+            const categories = [...new Set(projects.map(p => p.category))].sort();
+            categoryFilter.innerHTML = '<option value="">All Categories</option>';
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categoryFilter.appendChild(option);
+            });
+        }
+
+        /**
+         * Renders projects as cards in the student view, applying filters and search.
+         */
+        function renderStudentProjects() {
+            studentProjectList.innerHTML = '';
+            const selectedCategory = categoryFilter.value;
+            const searchTerm = projectSearch.value.toLowerCase();
+
+            const filteredProjects = projects.filter(project => {
+                const matchesCategory = selectedCategory === '' || project.category === selectedCategory;
+                const matchesSearch = project.title.toLowerCase().includes(searchTerm) || project.description.toLowerCase().includes(searchTerm);
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filteredProjects.length === 0) {
+                noStudentProjectsMessage.classList.remove('hidden');
+            } else {
+                noStudentProjectsMessage.classList.add('hidden');
+                filteredProjects.forEach(project => {
+                    const projectCard = document.createElement('div');
+                    projectCard.classList.add(
+                        'bg-white', 'p-5', 'rounded-lg', 'shadow-md', 'flex', 'flex-col',
+                        'justify-between', 'transform', 'hover:scale-105', 'transition-transform', 'duration-200',
+                        'cursor-pointer' // Add cursor pointer to indicate clickable
+                    );
+                    projectCard.dataset.projectId = project.id; // Store project ID for detail view
+
+                    projectCard.innerHTML = `
+                        <h4 class="text-lg font-semibold text-gray-900 mb-2">${project.title}</h4>
+                        <p class="text-sm text-gray-600 mb-3">Category: ${project.category}</p>
+                        <p class="text-xl font-bold text-blue-700 mb-4">Cost: ₹${project.cost.toLocaleString('en-IN')}</p>
+                        <button class="add-to-cart-btn w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition ease-in-out duration-150 shadow-sm flex items-center justify-center space-x-2">
+                            <i class="fas fa-cart-plus"></i> <span>Add to Cart</span>
+                        </button>
+                    `;
+                    // Event listener for opening detail modal (on card click, not button)
+                    projectCard.addEventListener('click', (event) => {
+                        // Ensure click on button doesn't trigger modal
+                        if (!event.target.closest('.add-to-cart-btn')) {
+                            openProjectDetailModal(project);
+                        }
+                    });
+
+                    const addToCartBtn = projectCard.querySelector('.add-to-cart-btn');
+                    addToCartBtn.addEventListener('click', (event) => {
+                        event.stopPropagation(); // Prevent card click from firing when button is clicked
+                        handleAddToCart(project);
+                    });
+                    studentProjectList.appendChild(projectCard);
+                });
+            }
+        }
+
+        /**
+         * Opens the project detail modal.
+         * @param {Object} project - The project object to display.
+         */
+        function openProjectDetailModal(project) {
+            currentProjectInDetailModal = project; // Store the project for add to cart button
+            projectDetailTitle.textContent = project.title;
+            projectDetailCategory.textContent = project.category;
+            projectDetailCost.textContent = project.cost.toLocaleString('en-IN');
+            projectDetailDescription.textContent = project.description || 'No description available.';
+            projectDetailModal.classList.remove('hidden');
+        }
+
+        /**
+         * Closes the project detail modal.
+         */
+        function closeProjectDetailModal() {
+            projectDetailModal.classList.add('hidden');
+            currentProjectInDetailModal = null;
+        }
+
+        /**
+         * Adds a project to the student's cart.
+         * @param {Object} project - The project object to add.
+         */
+        function handleAddToCart(project) {
+            const existingItem = studentCart.find(item => item.id === project.id); // Use project ID for uniqueness
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                studentCart.push({ ...project, quantity: 1 });
+            }
+            saveData(LOCAL_STORAGE_KEY_STUDENT_CART, studentCart);
+            updateCartCount();
+            showMessageBox(`${project.title} added to cart!`);
+        }
+
+        /**
+         * Updates the cart item count displayed.
+         */
+        function updateCartCount() {
+            const totalItems = studentCart.reduce((sum, item) => sum + item.quantity, 0);
+            cartItemCount.textContent = totalItems;
+        }
+
+        /**
+         * Opens the cart modal and renders cart items.
+         */
+        function openCartModal() {
+            cartModal.classList.remove('hidden');
+            renderCartItems();
+        }
+
+        /**
+         * Closes the cart modal.
+         */
+        function closeCartModal() {
+            cartModal.classList.add('hidden');
+        }
+
+        /**
+         * Renders items in the cart modal.
+         */
+        function renderCartItems() {
+            cartItemsContainer.innerHTML = '';
+            let totalCost = 0;
+
+            if (studentCart.length === 0) {
+                cartItemsContainer.innerHTML = '<p class="text-center text-gray-500 py-4">Your cart is empty.</p>';
+                sendInquiryBtn.disabled = true; // Disable send inquiry if cart is empty
+            } else {
+                sendInquiryBtn.disabled = false; // Enable send inquiry if cart has items
+                studentCart.forEach((item, index) => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.classList.add('flex', 'justify-between', 'items-center', 'py-2', 'border-b', 'border-gray-100');
+                    itemDiv.innerHTML = `
+                        <div>
+                            <p class="font-medium text-gray-800">${item.title}</p>
+                            <p class="text-sm text-gray-600">₹${item.cost.toLocaleString('en-IN')} x ${item.quantity}</p>
+                        </div>
+                        <div class="flex items-center space-x-2 no-print">
+                            <button class="quantity-btn px-2 py-1 bg-gray-200 rounded-md hover:bg-gray-300 text-gray-700" data-index="${index}" data-action="decrease">-</button>
+                            <span class="font-bold">${item.quantity}</span>
+                            <button class="quantity-btn px-2 py-1 bg-gray-200 rounded-md hover:bg-gray-300 text-gray-700" data-index="${index}" data-action="increase">+</button>
+                            <button class="remove-from-cart-btn px-3 py-1 bg-red-100 text-red-600 rounded-md hover:bg-red-200 transition text-xs" data-index="${index}">
+                                <i class="fas fa-times"></i> Remove
+                            </button>
+                        </div>
+                    `;
+                    cartItemsContainer.appendChild(itemDiv);
+                    totalCost += item.cost * item.quantity;
+                });
+            }
+            cartTotal.textContent = totalCost.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+            // Add event listeners for quantity buttons and remove buttons
+            cartItemsContainer.querySelectorAll('.quantity-btn').forEach(button => {
+                button.addEventListener('click', handleQuantityChange);
+            });
+            cartItemsContainer.querySelectorAll('.remove-from-cart-btn').forEach(button => {
+                button.addEventListener('click', handleRemoveFromCart);
+            });
+        }
+
+        /**
+         * Handles changing the quantity of an item in the cart.
+         * @param {Event} event - The click event.
+         */
+        function handleQuantityChange(event) {
+            const index = parseInt(event.currentTarget.dataset.index);
+            const action = event.currentTarget.dataset.action;
+
+            if (action === 'increase') {
+                studentCart[index].quantity++;
+            } else if (action === 'decrease') {
+                if (studentCart[index].quantity > 1) {
+                    studentCart[index].quantity--;
+                } else {
+                    // If quantity becomes 0, remove the item
+                    studentCart.splice(index, 1);
+                }
+            }
+            saveData(LOCAL_STORAGE_KEY_STUDENT_CART, studentCart);
+            renderCartItems();
+            updateCartCount();
+        }
+
+        /**
+         * Handles removing an item completely from the cart.
+         * @param {Event} event - The click event.
+         */
+        function handleRemoveFromCart(event) {
+            const index = parseInt(event.currentTarget.dataset.index);
+            studentCart.splice(index, 1);
+            saveData(LOCAL_STORAGE_KEY_STUDENT_CART, studentCart);
+            renderCartItems();
+            updateCartCount();
+            showMessageBox("Item removed from cart.");
+        }
+
+        /**
+         * Clears all items from the cart.
+         */
+        function handleClearCart() {
+            if (studentCart.length === 0) {
+                showMessageBox("Cart is already empty.");
+                return;
+            }
+            studentCart = [];
+            saveData(LOCAL_STORAGE_KEY_STUDENT_CART, studentCart);
+            renderCartItems();
+            updateCartCount();
+            showMessageBox("Cart cleared.");
+        }
+
+        /**
+         * Generates the inquiry message, saves it, and opens WhatsApp.
+         */
+        function handleSendInquiry() {
+            const name = inquiryName.value.trim();
+            const college = inquiryCollege.value.trim();
+            const state = inquiryState.value.trim();
+            const city = inquiryCity.value.trim();
+            const mobile = inquiryMobile.value.trim();
+            const email = inquiryEmail.value.trim();
+            const referralCodeUsed = inquiryReferralCode.value.trim();
+            const message = inquiryMessage.value.trim();
+
+            if (!name || !mobile) {
+                showMessageBox("Please enter your name and mobile number to send inquiry.");
+                return;
+            }
+            if (!/^\d{10}$/.test(mobile)) {
+                showMessageBox("Please enter a valid 10-digit mobile number.");
+                return;
+            }
+            if (email && !/\S+@\S+\.\S+/.test(email)) {
+                showMessageBox("Please enter a valid email address.");
+                return;
+            }
+            if (studentCart.length === 0) {
+                showMessageBox("Your cart is empty. Please add projects before sending an inquiry.");
+                return;
+            }
+
+            const inquiryId = `INQ-${Date.now()}`;
+            const totalCost = studentCart.reduce((sum, item) => sum + (item.cost * item.quantity), 0);
+
+            const studentDetails = { name, college, state, city, mobile, email };
+
+            const inquiryObject = {
+                id: inquiryId,
+                studentDetails: studentDetails,
+                timestamp: new Date().toISOString(),
+                inquiredItems: JSON.parse(JSON.stringify(studentCart)), // Deep copy of cart items
+                totalCost: totalCost,
+                referralCodeUsed: referralCodeUsed,
+                status: 'new' // New inquiry status
+            };
+
+            inquiries.push(inquiryObject);
+            saveData(LOCAL_STORAGE_KEY_INQUIRIES, inquiries); // Save the new inquiry
+
+            let whatsappMessage = `DIY Circuits - Project Inquiry\n\n`;
+            whatsappMessage += `Inquiry ID: ${inquiryId}\n`;
+            whatsappMessage += `Student Name: ${name}\n`;
+            if (college) whatsappMessage += `College Name: ${college}\n`;
+            if (state) whatsappMessage += `State: ${state}\n`;
+            if (city) whatsappMessage += `City/Village: ${city}\n`;
+            whatsappMessage += `Mobile Number: ${mobile}\n`;
+            if (email) whatsappMessage += `Email: ${email}\n`;
+            if (referralCodeUsed) whatsappMessage += `Referral Code Used: ${referralCodeUsed}\n`;
+            if (message) whatsappMessage += `Additional Message: ${message}\n`;
+            whatsappMessage += `\nInquired Projects:\n`;
+            studentCart.forEach(item => {
+                whatsappMessage += `- ${item.title} (Category: ${item.category}) - ₹${item.cost.toLocaleString('en-IN')} x ${item.quantity}\n`;
+            });
+            whatsappMessage += `\nEstimated Total Cost: ₹${totalCost.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\n\n`;
+            whatsappMessage += `--- DIY Circuits Contact ---\n`;
+            whatsappMessage += `Address: 373, Near Chinnapa Akhada, Panchpaoli Rd, Balabhaupeth, Nagpur, Maharashtra 440017\n`;
+            whatsappMessage += `Contact: +91-8446173429, +91-9172151715\n`;
+            whatsappMessage += `Website: www.diycircuits.in\n`;
+            whatsappMessage += `Social: @diycircuits`;
+
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            const whatsappUrl = `https://wa.me/${ADMIN_WHATSAPP_NUMBER}?text=${encodedMessage}`;
+
+            window.open(whatsappUrl, '_blank'); // Open WhatsApp in a new tab
+
+            showMessageBox("Your inquiry is being sent to WhatsApp. Please send the message in WhatsApp.");
+
+            // Clear cart and inquiry form after sending
+            studentCart = [];
+            saveData(LOCAL_STORAGE_KEY_STUDENT_CART, studentCart);
+            updateCartCount();
+            renderCartItems(); // Re-render cart to show it's empty
+            inquiryName.value = '';
+            inquiryCollege.value = '';
+            inquiryState.value = '';
+            inquiryCity.value = '';
+            inquiryMobile.value = '';
+            inquiryEmail.value = '';
+            inquiryReferralCode.value = '';
+            inquiryMessage.value = '';
+
+            updateNewInquiriesBadge(); // Update badge after a new inquiry is placed
+        }
+
+        /**
+         * Generates a unique referral link (code) and displays it.
+         */
+        function generateReferralLink() {
+            const referralCode = `DIYREF-${Date.now().toString(36).toUpperCase()}`; // Simple unique code
+            referralLinkDisplay.value = referralCode;
+            copyReferralLinkBtn.classList.remove('hidden');
+            showMessageBox("Your referral code has been generated. Copy it and share!");
+        }
+
+        /**
+         * Copies the generated referral link to the clipboard.
+         */
+        function copyReferralLink() {
+            referralLinkDisplay.select();
+            referralLinkDisplay.setSelectionRange(0, 99999); // For mobile devices
+            try {
+                document.execCommand('copy');
+                showMessageBox("Referral code copied to clipboard!");
+            } catch (err) {
+                console.error('Failed to copy referral code: ', err);
+                showMessageBox("Failed to copy referral code. Please copy it manually.");
+            }
+        }
+
+        /**
+         * Handles a direct WhatsApp inquiry (general message, not cart-specific).
+         */
+        function handleDirectWhatsappInquiry() {
+            const defaultMessage = "Hello DIY Circuits, I have a general inquiry about your projects/services. Could you please assist me?";
+            const encodedMessage = encodeURIComponent(defaultMessage);
+            const whatsappUrl = `https://wa.me/${ADMIN_WHATSAPP_NUMBER}?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
+            showMessageBox("Opening WhatsApp for direct inquiry. Please send your message.");
+        }
+
+        // --- Event Listeners ---
+        showLoginBtn.addEventListener('click', showLoginSection);
+        showStudentBtn.addEventListener('click', showStudentDashboard);
+        loginForm.addEventListener('submit', handleLogin);
+        adminLogoutBtn.addEventListener('click', handleAdminLogout);
+        adminProjectForm.addEventListener('submit', handleSubmitProjectForm);
+        cancelEditProjectBtn.addEventListener('click', resetProjectForm);
+        viewCartBtn.addEventListener('click', openCartModal);
+        closeCartModalBtn.addEventListener('click', closeCartModal);
+        clearCartBtn.addEventListener('click', handleClearCart);
+        sendInquiryBtn.addEventListener('click', handleSendInquiry); 
+
+        // Project Detail Modal listeners
+        closeProjectDetailModalBtn.addEventListener('click', closeProjectDetailModal);
+        addProjectToCartFromDetailBtn.addEventListener('click', () => {
+            if (currentProjectInDetailModal) {
+                handleAddToCart(currentProjectInDetailModal);
+                closeProjectDetailModal(); // Close modal after adding to cart
+            }
+        });
+
+        // Referral event listeners
+        generateReferralLinkBtn.addEventListener('click', generateReferralLink);
+        copyReferralLinkBtn.addEventListener('click', copyReferralLink);
+
+        // Admin sub-section navigation
+        showAdminProjectsBtn.addEventListener('click', showAdminProjectsManagementSection);
+        showAdminInquiriesBtn.addEventListener('click', showAdminInquiriesViewSection); 
+        clearAllInquiriesBtn.addEventListener('click', handleClearAllInquiries); 
+
+        // New event listener for direct WhatsApp button
+        directWhatsappBtn.addEventListener('click', handleDirectWhatsappInquiry);
+
+
+        // Filter and Search event listeners (debounce for search for better performance)
+        categoryFilter.addEventListener('change', renderStudentProjects);
+        let searchTimeout;
+        projectSearch.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(renderStudentProjects, 300); // Debounce search
+        });
+
+        // --- Initial Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load projects from LocalStorage, or use initial data (which is now empty)
+            let loadedProjects = loadData(LOCAL_STORAGE_KEY_PROJECTS, initialProjectsData);
+            // Ensure all loaded projects have a unique ID. If not, generate one.
+            projects = loadedProjects.map(p => ({ ...p, id: p.id || `proj-${Date.now()}-${Math.random().toString(36).substring(2, 9)}` }));
+            // Save back to ensure all projects have IDs for consistency
+            saveData(LOCAL_STORAGE_KEY_PROJECTS, projects); 
+
+            // Load student cart
+            studentCart = loadData(LOCAL_STORAGE_KEY_STUDENT_CART, []);
+            // Load inquiries
+            inquiries = loadData(LOCAL_STORAGE_KEY_INQUIRIES, []);
+
+            checkAuth(); // Determine which view to show initially (now defaults to student)
+            updateCartCount(); // Update cart count on load
+            updateCategoryFilter(); // Populate category filter on load
+            updateNewInquiriesBadge(); // Update new inquiries badge on load
+        });
+    </script>
+</body>
+</html>
